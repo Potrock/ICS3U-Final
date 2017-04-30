@@ -10,7 +10,7 @@ import javafx.geometry.Point2D;
 public class Element {
     private Node view;
     private Point2D velocity = new Point2D(0, 0);
-    public boolean isAlive;
+    public boolean isAlive = true;
 
 
     public Element(Node view) {
@@ -61,8 +61,8 @@ public class Element {
         setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
     }
 
-    public boolean isHitting(Element other) {
-        return getView().getBoundsInParent().intersects(other.getView().getBoundsInParent());
+    public boolean isHitting(Node other) {
+        return getView().getBoundsInParent().intersects(other.getBoundsInParent());
     }
 
 
