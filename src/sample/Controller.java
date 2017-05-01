@@ -17,7 +17,7 @@ public class Controller {
 
     @FXML
     void startOnAction(ActionEvent event) throws IOException {
-        Main.setGameState(Main.gameState.MAP1);
+        Main.setGameState(Main.gameState.MAP2);
     }
 
     @FXML
