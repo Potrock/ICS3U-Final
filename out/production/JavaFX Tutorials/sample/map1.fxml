@@ -6,11 +6,5 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8e9194" height="400.0" stroke="#8e9194" strokeType="OUTSIDE" width="10.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8e9194" height="10.0" layoutY="390.0" stroke="#8e9194" strokeType="OUTSIDE" width="600.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8e9194" height="10.0" stroke="#8e9194" strokeType="OUTSIDE" width="600.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8e9194" height="400.0" layoutX="590.0" stroke="#8e9194" strokeType="OUTSIDE" width="10.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8e9194" height="100.0" layoutX="69.0" layoutY="10.0" stroke="#8e9194" strokeType="OUTSIDE" width="10.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8e9194" height="10.0" layoutX="69.0" layoutY="109.0" stroke="#8e9194" strokeType="OUTSIDE" width="200.0" />
    </children>
 </AnchorPane>

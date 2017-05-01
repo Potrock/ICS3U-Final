@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$1.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$2.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$Bullet.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$Bullet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$Tank.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$Tank.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$gameState.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$gameState.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Element.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Element.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Element.java" afterPath="$PROJECT_DIR$/src/sample/Element.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Main.java" afterPath="$PROJECT_DIR$/src/sample/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/map1.fxml" afterPath="$PROJECT_DIR$/src/sample/map1.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/map1.fxml" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/map1.fxml" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -76,8 +69,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3475">
-              <caret line="155" column="43" lean-forward="false" selection-start-line="155" selection-start-column="43" selection-end-line="155" selection-end-column="43" />
+            <state relative-caret-position="100">
+              <caret line="46" column="45" lean-forward="true" selection-start-line="46" selection-start-column="45" selection-end-line="46" selection-end-column="45" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3429#3430#0" expanded="true" />
@@ -599,7 +592,14 @@
       <option name="project" value="LOCAL" />
       <updated>1493083601799</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="CREATE WALLS">
+      <created>1493577710106</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1493577710106</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1132,8 +1132,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3475">
-          <caret line="155" column="43" lean-forward="false" selection-start-line="155" selection-start-column="43" selection-end-line="155" selection-end-column="43" />
+        <state relative-caret-position="100">
+          <caret line="46" column="45" lean-forward="true" selection-start-line="46" selection-start-column="45" selection-end-line="46" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3429#3430#0" expanded="true" />
