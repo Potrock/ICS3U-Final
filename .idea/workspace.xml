@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/sample/map1.fxml" afterPath="$PROJECT_DIR$/src/sample/map.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Element.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Element.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$1.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$Bullet.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$Bullet.class" />
@@ -13,8 +12,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$gameState.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main$gameState.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main.class" afterPath="$PROJECT_DIR$/out/production/JavaFX Tutorials/sample/Main.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Controller.java" afterPath="$PROJECT_DIR$/src/sample/Controller.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Main.java" afterPath="$PROJECT_DIR$/src/sample/Main.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -1463,7 +1460,14 @@
       <option name="project" value="LOCAL" />
       <updated>1493654225740</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="BULLET REFLECTION :D">
+      <created>1493736083275</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1493736083275</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1585,7 +1589,8 @@
     <MESSAGE value="COmmit" />
     <MESSAGE value="CREATE WALLS" />
     <MESSAGE value="PRE-BULLET REFLECTION" />
-    <option name="LAST_COMMIT_MESSAGE" value="PRE-BULLET REFLECTION" />
+    <MESSAGE value="BULLET REFLECTION :D" />
+    <option name="LAST_COMMIT_MESSAGE" value="BULLET REFLECTION :D" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
