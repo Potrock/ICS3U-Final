@@ -7,61 +7,64 @@ import javafx.geometry.Point2D;
 /**
  * Created by pwbla on 2017-04-24.
  */
-public class Element {
+class Element {
     private Node view;
     private Point2D velocity = new Point2D(0, 0);
-    public boolean isAlive = true;
+    private boolean isAlive = true;
+    int counter = 0;
 
 
-    public Element(Node view) {
+    Element(Node view) {
         this.view = view;
     }
 
 
-    public void updateLocation(double constant) {
+    void updateLocation(double constant) {
         view.setTranslateX(view.getTranslateX() + velocity.getX() * constant);
         view.setTranslateY(view.getTranslateY() + velocity.getY() * constant);
     }
 
-    public void setVelocity(Point2D velocity) {
+    void setVelocity(Point2D velocity) {
         this.velocity = velocity;
     }
 
-    public Point2D getVelocity() {
+    Point2D getVelocity() {
         return velocity;
     }
 
-    public boolean alive() {
+    boolean alive() {
         return isAlive;
     }
 
-    public boolean dead() {
+    int getCounter() { return counter;}
+
+    boolean dead() {
         return !isAlive;
     }
 
-    public void setStatus(boolean status) {
+    void setStatus(boolean status) {
         this.isAlive = status;
     }
 
-    public double getRotate() {
+    private double getRotate() {
         return view.getRotate();
     }
 
-    public Node getView() {
+    Node getView() {
         return view;
     }
 
-    public void rotateRight() {
+    void rotateRight() {
         view.setRotate(view.getRotate() + 5);
         setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
     }
 
-    public void rotateLeft() {
+    void rotateLeft() {
         view.setRotate(view.getRotate() - 5);
         setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
     }
 
-    public boolean isHitting(Node other) {
+    boolean isHitting(Node other) {
         return getView().getBoundsInParent().intersects(other.getBoundsInParent());
     }
 
