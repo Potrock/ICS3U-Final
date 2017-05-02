@@ -3,6 +3,7 @@ package sample;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -28,6 +29,8 @@ public class Main extends Application {
     private static int count = 0, currentMap = 0;
     private static boolean w, a, s, d, up, down, left, right, m, q;
     private static boolean gameStarted;
+    private static boolean readyToShoot = false;
+    private static boolean notTouching = true;
 
     private static void addToGame(Element element, double x, double y, Pane map) {
         element.getView().setTranslateX(x);
@@ -83,6 +86,39 @@ public class Main extends Application {
                     d = e.getCode() == KeyCode.D;
                     q = e.getCode() == KeyCode.Q;
                 });
+                map1p.getScene().setOnKeyReleased(e -> {
+                    if (e.getCode() == KeyCode.LEFT) {
+                        left = false;
+                    }
+                    if (e.getCode() == KeyCode.RIGHT) {
+                        right = false;
+                    }
+                    if (e.getCode() == KeyCode.M) {
+                        m = false;
+                        readyToShoot = true;
+                    }
+                    if (e.getCode() == KeyCode.UP) {
+                        up = false;
+                    }
+                    if (e.getCode() == KeyCode.DOWN) {
+                        down = false;
+                    }
+                    if (e.getCode() == KeyCode.W) {
+                        w = false;
+                    }
+                    if (e.getCode() == KeyCode.S) {
+                        s = false;
+                    }
+                    if (e.getCode() == KeyCode.A) {
+                        a = false;
+                    }
+                    if (e.getCode() == KeyCode.D) {
+                        d = false;
+                    }
+                    if (e.getCode() == KeyCode.Q) {
+                        q = false;
+                    }
+                });
                 break;
             case MAP2:
                 currentMap = 2;
@@ -136,6 +172,7 @@ public class Main extends Application {
                     }
                     if (e.getCode() == KeyCode.M) {
                         m = false;
+                        readyToShoot = true;
                     }
                     if (e.getCode() == KeyCode.UP) {
                         up = false;
@@ -213,6 +250,7 @@ public class Main extends Application {
                     }
                     if (e.getCode() == KeyCode.M) {
                         m = false;
+                        readyToShoot = true;
                     }
                     if (e.getCode() == KeyCode.UP) {
                         up = false;
@@ -254,13 +292,16 @@ public class Main extends Application {
         }
     }
 
-    private static void bulletCol(Pane map) {
+    private static void bulletCol() {
         for (Element bullet : bullets) {
             for (Rectangle wall : walls) {
                 if (bullet.isHitting(wall)) {
-                    bullet.setVelocity(bullet.getVelocity().add(bullet.getVelocity().getX() * -2, bullet.getVelocity().getY() * -2));
-                    //TODO: bullet reflection off walls like in AZ Tanks..
-//                    map.getChildren().remove(bullet.getView());
+                    if (wall.getWidth() == 10) {
+                        bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
+                    }
+                    if (wall.getHeight() == 10) {
+                        bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
+                    }
                 }
             }
         }
@@ -299,29 +340,59 @@ public class Main extends Application {
         count = 0;
     }
 
+    private void resetMatch() {
+        switch (currentMap) {
+            case 1:
+                try {
+                    setGameState(gameState.MAP2);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 2:
+                try {
+                    setGameState(gameState.MAP3);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 3:
+                try {
+                    setGameState(gameState.MAP1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
     private void onUpdate() {
         if (gameStarted) {
             colDetect(player1);
             colDetect(player2);
-
+            if (player1.dead())
+                resetMatch();
+            if (player2.dead())
+                resetMatch();
             switch (currentMap) {
                 case 1:
                     keyCheck(map1p);
-                    if (count > 10)
+                    if (count > 20)
                         killDetect(map1p);
-                    bulletCol(map1p);
+                    bulletCol();
                     for (Element bullet : bullets) {
-                        bullet.updateLocation(1);
                         bullet.counter++;
-                        if (bullet.getCounter() > 300 || bullet.dead())
+                        bullet.updateLocation(1);
+                        if (bullet.getCounter() > 300 || bullet.dead()) {
                             map1p.getChildren().remove(bullet.getView());
+                        }
                     }
+                    count++;
                     break;
                 case 2:
                     keyCheck(map2p);
-                    if (count > 10)
-                        System.out.println("hi");//killDetect(map2p);
-                    bulletCol(map2p);
+                    if (count > 20)
+                        killDetect(map2p);
+                    bulletCol();
                     for (Element bullet : bullets) {
                         bullet.counter++;
                         bullet.updateLocation(1);
@@ -329,17 +400,21 @@ public class Main extends Application {
                             map2p.getChildren().remove(bullet.getView());
                         }
                     }
+                    count++;
                     break;
                 case 3:
                     keyCheck(map3p);
-                    if (count > 10)
+                    if (count > 20)
                         killDetect(map3p);
+                    bulletCol();
                     for (Element bullet : bullets) {
-                        bullet.updateLocation(1);
                         bullet.counter++;
-                        if (bullet.getCounter() > 300 || bullet.dead())
+                        bullet.updateLocation(1);
+                        if (bullet.getCounter() > 300 || bullet.dead()) {
                             map3p.getChildren().remove(bullet.getView());
+                        }
                     }
+                    count++;
                     break;
             }
 
@@ -349,16 +424,31 @@ public class Main extends Application {
 
     private void keyCheck(Pane map) {
         if (left) {
-            player1.rotateLeft();
+            for (Rectangle wall : walls) {
+                if (player1.isHitting(wall))
+                    notTouching = false;
         }
+        if (notTouching) {
+                player1.rotateLeft();
+        }
+        notTouching = true;
+    }
         if (right) {
-            player1.rotateRight();
+            for (Rectangle wall: walls) {
+                if (player1.isHitting(wall))
+                    notTouching = false;
+            }
+            if (notTouching) {
+                player1.rotateRight();
+            }
+            notTouching = true;
         }
-        if (m) {
+        if (m && readyToShoot) {
             if (player1.alive()) {
                 Bullet bullet = new Bullet();
-                bullet.setVelocity(player1.getVelocity().normalize().multiply(5));
+                bullet.setVelocity(player1.getVelocity().normalize().multiply(3));
                 addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map);
+                readyToShoot = false;
             }
         }
         if (up) {
@@ -368,7 +458,7 @@ public class Main extends Application {
             player1.updateLocation(-1.75);
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
-                    player1.updateLocation(1.75);
+                    player1.updateLocation(2);
                 }
             }
         }
@@ -382,10 +472,18 @@ public class Main extends Application {
                 }
             }
         }
-        if (a)
-            player2.rotateLeft();
-        if (d)
-            player2.rotateRight();
+        if (a) {
+            for (Rectangle wall : walls) {
+                if (!player2.isHitting(wall))
+                    player2.rotateLeft();
+            }
+        }
+        if (d) {
+            for (Rectangle wall : walls) {
+                if (!player2.isHitting(wall))
+                    player2.rotateRight();
+            }
+        }
         if (q) {
             if (player2.alive()) {
                 Bullet bullet = new Bullet();
@@ -403,10 +501,12 @@ public class Main extends Application {
                 player1.setStatus(false);
                 map.getChildren().remove(player1.getView());
                 System.out.println("player 1 dead");
+                map.getChildren().remove(bullet.getView());
             }
             if (bullet.isHitting(player2.getView())) {
                 player2.setStatus(false);
                 map.getChildren().remove(player2.getView());
+                map.getChildren().remove(bullet.getView());
                 System.out.println("player 2 dead");
             }
         }

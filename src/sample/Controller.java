@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class Controller {
 
@@ -17,7 +18,7 @@ public class Controller {
 
     @FXML
     void startOnAction(ActionEvent event) throws IOException {
-        Main.setGameState(Main.gameState.MAP2);
+        Main.setGameState(Main.gameState.MAP1);
     }
 
     @FXML
