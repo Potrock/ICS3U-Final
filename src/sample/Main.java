@@ -20,7 +20,7 @@ public class Main extends Application {
     private static AnchorPane map1p;
     private static AnchorPane map2p;
     private static AnchorPane map3p;
-    private static Scene map1;
+    private static Scene map1, map2, map3, mainmenu;
     private static Tank player1;
     private static Tank player2;
     private static ArrayList<Element> bullets = new ArrayList<>();
@@ -31,28 +31,39 @@ public class Main extends Application {
     private static boolean gameStarted;
     private static boolean readyToShoot = false;
     private static boolean notTouching = true;
+    private static int player1Score, player2Score;
 
+
+    /*
+    This method is just to make adding objects to the game easier, just saves some typing since most of the objects made in this game are Elements, not native JavaFX Nodes.
+    */
     private static void addToGame(Element element, double x, double y, Pane map) {
         element.getView().setTranslateX(x);
         element.getView().setTranslateY(y);
         map.getChildren().add(element.getView());
     }
 
+
+    /*
+    Sets the game state for the match, also has all the prep for that arena (Making the walls, spawning the tanks, etc.)
+    Right now, you can't set a gameState back to one that has already been created but if it's really an issue and we want more than just Best 2/3 matches we can make a workaround.
+
+     */
     static void setGameState(gameState gameState) throws IOException {
         switch (gameState) {
             case MAIN:
-                primaryStage.setScene(map1);
+                primaryStage.setScene(mainmenu); //Sets the scene to the main menu, declarations already happened in the start method.
                 break;
             case MAP1:
-                currentMap = 1;
-                map1 = new Scene(map1p, 600, 400);
-                primaryStage.setScene(map1);
+                currentMap = 1; //Tells us that it's on Map 1..
+                map1 = new Scene(map1p, 600, 400); //Initializes Map1
+                primaryStage.setScene(map1); //Sets the scene to map1
                 player1 = new Tank();
-                player2 = new Tank();
+                player2 = new Tank(); //Creates both tanks
                 addToGame(player1, 30, 285, map1p);
                 addToGame(player2, 525, 255, map1p);
-                gameStarted = true;
-                createWall(10, 400, 0, 0, map1p);
+                gameStarted = true; //Sets game to have started
+                createWall(10, 400, 0, 0, map1p); //These createWall methods all create the layout of the map.
                 createWall(10, 400, 590, 0, map1p);
                 createWall(600, 10, 0, 0, map1p);
                 createWall(600, 10, 0, 390, map1p);
@@ -74,7 +85,7 @@ public class Main extends Application {
                 createWall(140, 10, 250, 255, map1p);
                 createWall(10, 75, 390, 255, map1p);
                 createWall(210, 10, 390, 330, map1p);
-                map1p.getScene().setOnKeyPressed(e -> {
+                map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
                     left = e.getCode() == KeyCode.LEFT;
                     right = e.getCode() == KeyCode.RIGHT;
                     m = e.getCode() == KeyCode.M;
@@ -86,7 +97,7 @@ public class Main extends Application {
                     d = e.getCode() == KeyCode.D;
                     q = e.getCode() == KeyCode.Q;
                 });
-                map1p.getScene().setOnKeyReleased(e -> {
+                map1p.getScene().setOnKeyReleased(e -> { //Creates listener for key releases and sets boolean values for usage in the KeyCheck method.
                     if (e.getCode() == KeyCode.LEFT) {
                         left = false;
                     }
@@ -121,6 +132,9 @@ public class Main extends Application {
                 });
                 break;
             case MAP2:
+                /*
+                See explanation for Map 1
+                 */
                 currentMap = 2;
                 createWall(10, 400, 0, 0, map2p);
                 createWall(10, 400, 590, 0, map2p);
@@ -144,7 +158,7 @@ public class Main extends Application {
                 createWall(110, 10, 400, 165, map2p);
                 createWall(130, 10, 490, 240, map2p);
                 createWall(10, 80, 490, 240, map2p);
-                Scene map2 = new Scene(map2p, 600, 400);
+                map2 = new Scene(map2p, 600, 400);
                 primaryStage.setScene(map2);
                 player1 = new Tank();
                 player2 = new Tank();
@@ -198,6 +212,9 @@ public class Main extends Application {
                 });
                 break;
             case MAP3:
+                /*
+                See explanation for Map 1
+                 */
                 currentMap = 3;
                 createWall(10, 400, 0, 0, map3p);
                 createWall(10, 400, 590, 0, map3p);
@@ -222,7 +239,7 @@ public class Main extends Application {
                 createWall(10, 125, 455, 0, map3p);
                 createWall(60, 10, 455, 125, map3p);
                 createWall(10, 110, 505, 125, map3p);
-                Scene map3 = new Scene(map3p, 600, 400);
+                map3 = new Scene(map3p, 600, 400);
                 player1 = new Tank();
                 player2 = new Tank();
                 addToGame(player1, 120, 115, map3p);
@@ -278,12 +295,17 @@ public class Main extends Application {
         }
     }
 
-    private static void createWall(int width, int height, int x, int y, Pane map) {
-        Rectangle rect = new Rectangle(x, y, width, height);
-        walls.add(rect);
-        map.getChildren().add(rect);
+    private static void createWall(int width, int height, int x, int y, Pane map) { //Takes input for the width,e height, coordinates and which Parent the wall should be in
+        Rectangle rect = new Rectangle(x, y, width, height); //Creates the rectangle with a meaningless name.
+        walls.add(rect); //Adds the rectangle to the arraylist of rectangles
+        map.getChildren().add(rect); //Adds it to the parent that is being used.
     }
 
+    /*
+    Takes input for which players collision is being checked
+    For every wall in the array list of walls (all walls in the map), it checks if the player in question is touching that wall.
+    If it's hitting a wall, it pushes them backwards.
+     */
     private static void colDetect(Tank player) {
         for (Rectangle wall : walls) {
             if (player.isHitting(wall)) {
@@ -292,6 +314,12 @@ public class Main extends Application {
         }
     }
 
+    /*
+    Doesnt take input because bullets interract with everything and the bullet arraylist is global.
+    For every bullet that has been shot, check if it's hit each wall, and if it's hit a wall:
+    Check if the wall is vertical (Width of 10), if it is, invert the X velocity of the bullet
+    Check fi the wall is horizontal (width of 10), if it is, invert the Y velocity of the bullet
+     */
     private static void bulletCol() {
         for (Element bullet : bullets) {
             for (Rectangle wall : walls) {
@@ -313,17 +341,20 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        AnchorPane stage = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        Scene mainmenu = new Scene(stage, 400, 400);
-        primaryStage.setScene(mainmenu);
-        primaryStage.show();
-        primaryStage.setResizable(false);
+        AnchorPane stage = FXMLLoader.load(getClass().getResource("sample.fxml")); //Gets the main menu from the FXML file
+        mainmenu = new Scene(stage, 400, 400); //Initializes Main Menu Scene
+        primaryStage.setScene(mainmenu); //Sets the scene
+        primaryStage.show(); //Shows the screen
+        primaryStage.setResizable(false); //Disables resizing the screen
         Main.primaryStage = primaryStage;
-        map1p = FXMLLoader.load(getClass().getResource("map.fxml"));
+        map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
         map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
         map3p = FXMLLoader.load(getClass().getResource("map.fxml"));
 
 
+        /*
+        Creates an animation that will run the handle method x times per second (60fps masterrace)
+         */
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -334,16 +365,33 @@ public class Main extends Application {
 
     }
 
+    /*
+    Adds a bullet to the game (called when M or Q is being pressed)
+    Adds the bullet to the arraylist of bullets (global)
+    Adds it to the game
+    Sets the count to 0 to stop people from being killed by their own bullet
+     */
     private void addBullet(Element element, double x, double y, Pane map) {
         bullets.add(element);
         addToGame(element, x, y, map);
         count = 0;
     }
 
+
+    /*
+    Called when somebody dies
+    Depending on the map being played it will go to a different task in the switch statement.
+
+    Clears the walls array list to stop people from being blocked by non-existant walls
+    Clears the bullet array list just because
+    Sets the game to the next map in the cycle (Throws IOException :( )
+     */
     private void resetMatch() {
         switch (currentMap) {
             case 1:
                 try {
+                    walls.clear();
+                    bullets.clear();
                     setGameState(gameState.MAP2);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -351,6 +399,8 @@ public class Main extends Application {
                 break;
             case 2:
                 try {
+                    walls.clear();
+                    bullets.clear();
                     setGameState(gameState.MAP3);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -358,6 +408,8 @@ public class Main extends Application {
                 break;
             case 3:
                 try {
+                    walls.clear();
+                    bullets.clear();
                     setGameState(gameState.MAP1);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -365,6 +417,19 @@ public class Main extends Application {
         }
     }
 
+    /*
+    Checks if the game is started to prevent NullPointerException errors
+    Checks collision detection for each loop interation
+    Checks if a player is dead and resets the match if that happened
+
+    All the cases in the switch statement do the same thing, just for different maps.
+    Starts by checking key presses/releases
+    If a bullet was shot 20 iterations ago, check kill dtection. Otherwise your own bullet will kill you.
+    Check bullet collision
+    Updates the location of every bullet, and checks if they should be removed/killed
+
+    Finally, increases the counter count of bullets.
+     */
     private void onUpdate() {
         if (gameStarted) {
             colDetect(player1);
@@ -422,18 +487,21 @@ public class Main extends Application {
         }
     }
 
+    /*
+    Checks the key presses and releases for both player1 and player2, for a more in-depth explanation look at the inline comments.
+     */
     private void keyCheck(Pane map) {
-        if (left) {
-            for (Rectangle wall : walls) {
+        if (left) { //If left is true it runs the left turn logic
+            for (Rectangle wall : walls) { //For every wall in the array list, check if the player is touching one and prevent turning if it is.
                 if (player1.isHitting(wall))
                     notTouching = false;
         }
         if (notTouching) {
-                player1.rotateLeft();
+                player1.rotateLeft(); //Only turn if it's not touching the wall
         }
         notTouching = true;
     }
-        if (right) {
+        if (right) { //Same as left logic but for right turning
             for (Rectangle wall: walls) {
                 if (player1.isHitting(wall))
                     notTouching = false;
@@ -443,18 +511,18 @@ public class Main extends Application {
             }
             notTouching = true;
         }
-        if (m && readyToShoot) {
-            if (player1.alive()) {
-                Bullet bullet = new Bullet();
-                bullet.setVelocity(player1.getVelocity().normalize().multiply(3));
-                addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map);
-                readyToShoot = false;
+        if (m && readyToShoot) { //Checks if M is true and the player is allowed to shoot again
+            if (player1.alive()) { //Checks if the player is actually alive
+                Bullet bullet = new Bullet(); //Creates a new bullet
+                bullet.setVelocity(player1.getVelocity().normalize().multiply(3)); //Sets the velocity to 3x that of the player who shot it
+                addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map); //Adds the bullet
+                readyToShoot = false; //Sets the player to not be ready to shoot.
             }
         }
         if (up) {
-            player1.updateLocation(1.75);
+            player1.updateLocation(1.75); //Updates the players location (Constant is for changing direction/speed)
         }
-        if (down) {
+        if (down) { //Same logic as up, but if it's going into a wall make it go forward instead of back.
             player1.updateLocation(-1.75);
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
@@ -463,7 +531,7 @@ public class Main extends Application {
             }
         }
         if (w)
-            player2.updateLocation(1.75);
+            player2.updateLocation(1.75); //Below this repeats the logic above for the other player
         if (s) {
             player2.updateLocation(-1.75);
             for (Rectangle wall : walls) {
@@ -494,8 +562,12 @@ public class Main extends Application {
         }
     }
 
+    /*
+    For every bullet in the game, check if it's hitting a player.
+    If it's hitting a player, kill the player and remove it from the scene.
+    Also, remove the bullet.
+     */
     private void killDetect(AnchorPane map) {
-        System.out.println("killdetect");
         for (Element bullet : bullets) {
             if (bullet.isHitting(player1.getView())) {
                 player1.setStatus(false);
@@ -512,6 +584,9 @@ public class Main extends Application {
         }
     }
 
+    /*
+    Enums for different game states.
+     */
     public enum gameState {
         MAIN,
         MAP1,
@@ -519,6 +594,10 @@ public class Main extends Application {
         MAP3
     }
 
+    /*
+    Tank class that inherits methods from the Element class
+    Makes a 25x25 blue square as a tank.
+     */
     static class Tank extends Element {
         Tank() {
             super(new Rectangle(25, 25, Color.BLUE));
@@ -526,6 +605,10 @@ public class Main extends Application {
 
     }
 
+    /*
+    Bulet class that inherits methods from the Element class.
+    Makes a small black circle as a bullet.
+     */
     static class Bullet extends Element {
         Bullet() {
             super(new Circle(5, 5, 5, Color.BLACK));
