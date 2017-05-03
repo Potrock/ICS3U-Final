@@ -5,12 +5,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -31,7 +33,10 @@ public class Main extends Application {
     private static boolean gameStarted;
     private static boolean readyToShoot = false;
     private static boolean notTouching = true;
-    private static int player1Score, player2Score;
+    private static int player1Score = 0, player2Score = 0;
+    private static Label labelplayer1score = new Label("Player 1: " + player1Score);
+    private static Label labelplayer2score = new Label("Player 2: " + player2Score);
+
 
 
     /*
@@ -85,6 +90,20 @@ public class Main extends Application {
                 createWall(140, 10, 250, 255, map1p);
                 createWall(10, 75, 390, 255, map1p);
                 createWall(210, 10, 390, 330, map1p);
+
+
+                labelplayer1score.setTranslateX(0);
+                labelplayer1score.setTranslateY(390);
+                labelplayer1score.setFont(new Font("Arial", 10));
+                labelplayer1score.setTextFill(Color.WHITE);
+                map1p.getChildren().add(labelplayer1score);
+
+                labelplayer2score.setTranslateX(548);
+                labelplayer2score.setTranslateY(390);
+                labelplayer2score.setFont(new Font("Arial", 10));
+                labelplayer2score.setTextFill(Color.WHITE);
+                map1p.getChildren().add(labelplayer2score);
+
                 map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
                     left = e.getCode() == KeyCode.LEFT;
                     right = e.getCode() == KeyCode.RIGHT;
@@ -97,6 +116,7 @@ public class Main extends Application {
                     d = e.getCode() == KeyCode.D;
                     q = e.getCode() == KeyCode.Q;
                 });
+
                 map1p.getScene().setOnKeyReleased(e -> { //Creates listener for key releases and sets boolean values for usage in the KeyCheck method.
                     if (e.getCode() == KeyCode.LEFT) {
                         left = false;
@@ -158,6 +178,20 @@ public class Main extends Application {
                 createWall(110, 10, 400, 165, map2p);
                 createWall(130, 10, 490, 240, map2p);
                 createWall(10, 80, 490, 240, map2p);
+
+                labelplayer1score = ("Player 1: " + player1Score);
+                labelplayer1score.setTranslateX(0);
+                labelplayer1score.setTranslateY(390);
+                labelplayer1score.setFont(new Font("Arial", 10));
+                labelplayer1score.setTextFill(Color.WHITE);
+                map2p.getChildren().add(labelplayer1score);
+
+                labelplayer2score.setTranslateX(548);
+                labelplayer2score.setTranslateY(390);
+                labelplayer2score.setFont(new Font("Arial", 10));
+                labelplayer2score.setTextFill(Color.WHITE);
+                map2p.getChildren().add(labelplayer2score);
+
                 map2 = new Scene(map2p, 600, 400);
                 primaryStage.setScene(map2);
                 player1 = new Tank();
@@ -239,6 +273,19 @@ public class Main extends Application {
                 createWall(10, 125, 455, 0, map3p);
                 createWall(60, 10, 455, 125, map3p);
                 createWall(10, 110, 505, 125, map3p);
+
+                labelplayer1score.setTranslateX(0);
+                labelplayer1score.setTranslateY(390);
+                labelplayer1score.setFont(new Font("Arial", 10));
+                labelplayer1score.setTextFill(Color.WHITE);
+                map3p.getChildren().add(labelplayer1score);
+
+                labelplayer2score.setTranslateX(548);
+                labelplayer2score.setTranslateY(390);
+                labelplayer2score.setFont(new Font("Arial", 10));
+                labelplayer2score.setTextFill(Color.WHITE);
+                map3p.getChildren().add(labelplayer2score);
+
                 map3 = new Scene(map3p, 600, 400);
                 player1 = new Tank();
                 player2 = new Tank();
@@ -574,12 +621,14 @@ public class Main extends Application {
                 map.getChildren().remove(player1.getView());
                 System.out.println("player 1 dead");
                 map.getChildren().remove(bullet.getView());
+                player2Score++;
             }
             if (bullet.isHitting(player2.getView())) {
                 player2.setStatus(false);
                 map.getChildren().remove(player2.getView());
                 map.getChildren().remove(bullet.getView());
                 System.out.println("player 2 dead");
+                player1Score++;
             }
         }
     }
@@ -606,7 +655,7 @@ public class Main extends Application {
     }
 
     /*
-    Bulet class that inherits methods from the Element class.
+    Bullet class that inherits methods from the Element class.
     Makes a small black circle as a bullet.
      */
     static class Bullet extends Element {
