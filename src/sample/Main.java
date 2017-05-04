@@ -2,6 +2,7 @@ package sample;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -33,9 +34,11 @@ public class Main extends Application {
     private static boolean gameStarted;
     private static boolean readyToShoot = false;
     private static boolean notTouching = true;
-    private static int player1Score = 0, player2Score = 0;
-    private static Label labelplayer1score = new Label("Player 1: " + player1Score);
-    private static Label labelplayer2score = new Label("Player 2: " + player2Score);
+    private static SimpleStringProperty player1Score;
+    private static SimpleStringProperty player2Score;
+    private static int score2 = 0, score1 = 0;
+    private static Label labelplayer1score = new Label("");
+    private static Label labelplayer2score = new Label("");
 
 
 
@@ -97,12 +100,16 @@ public class Main extends Application {
                 labelplayer1score.setFont(new Font("Arial", 10));
                 labelplayer1score.setTextFill(Color.WHITE);
                 map1p.getChildren().add(labelplayer1score);
+                player1Score = new SimpleStringProperty("Player 1: 0");
+                labelplayer1score.textProperty().bind(player1Score);
 
                 labelplayer2score.setTranslateX(548);
                 labelplayer2score.setTranslateY(390);
                 labelplayer2score.setFont(new Font("Arial", 10));
                 labelplayer2score.setTextFill(Color.WHITE);
                 map1p.getChildren().add(labelplayer2score);
+                player2Score = new SimpleStringProperty("Player 2: 0");
+                labelplayer2score.textProperty().bind(player2Score);
 
                 map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
                     left = e.getCode() == KeyCode.LEFT;
@@ -179,7 +186,6 @@ public class Main extends Application {
                 createWall(130, 10, 490, 240, map2p);
                 createWall(10, 80, 490, 240, map2p);
 
-                labelplayer1score = ("Player 1: " + player1Score);
                 labelplayer1score.setTranslateX(0);
                 labelplayer1score.setTranslateY(390);
                 labelplayer1score.setFont(new Font("Arial", 10));
@@ -621,14 +627,16 @@ public class Main extends Application {
                 map.getChildren().remove(player1.getView());
                 System.out.println("player 1 dead");
                 map.getChildren().remove(bullet.getView());
-                player2Score++;
+                score2++;
+                player2Score.set("Player 2: " + score2);
             }
             if (bullet.isHitting(player2.getView())) {
                 player2.setStatus(false);
                 map.getChildren().remove(player2.getView());
                 map.getChildren().remove(bullet.getView());
                 System.out.println("player 2 dead");
-                player1Score++;
+                score1++;
+                player1Score.set("Player 1: " + score1);
             }
         }
     }
