@@ -13,10 +13,9 @@ class Element {
     The Element class is for all the game objects, it contains the methods that each object is going to need on top of the native JavaFX methods.
      */
     private Node view; //Need to force Element objects to have JavaFX Node characteristics, so when you see elementName.getView(); in the main file, it's because I'm referencing JavaFX methods or values.
-    private Point2D velocity = new Point2D(0, 0); //Starts with a basic velocity
+    private Point2D velocity = new Point2D(1, 0); //Starts with a basic velocity, x velocity is 1 to enable linear movement on first move.
     private boolean isAlive = true; //Defaults to being alive
     int counter = 0; //The counter is used to represent how long something has been "alive", which helps with killing bullets after they've been around for too long.
-
 
     Element(Node view) {
         this.view = view; //The basic constructor giving the objects their node properties.
@@ -80,15 +79,8 @@ class Element {
     }
 
     /*
-    Returns the view of the object which allows us to apply JavaFX methods to the object.
-     */
-    Node getView() {
-        return view;
-    }
-
-    /*
     Rotates the object by 5 Degrees to the right (Math from https://www.youtube.com/watch?v=l2XhUHW8Oa4)
-     */
+    */
     void rotateRight() {
         view.setRotate(view.getRotate() + 5);
         setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
@@ -100,6 +92,13 @@ class Element {
     void rotateLeft() {
         view.setRotate(view.getRotate() - 5);
         setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
+    }
+
+    /*
+    Returns the view of the object which allows us to apply JavaFX methods to the object.
+     */
+    Node getView() {
+        return view;
     }
 
     /*

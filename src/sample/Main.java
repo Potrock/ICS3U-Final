@@ -39,6 +39,7 @@ public class Main extends Application {
     private static int score2 = 0, score1 = 0;
     private static Label labelplayer1score = new Label("");
     private static Label labelplayer2score = new Label("");
+    private static boolean collisionup = false;
 
 
 
@@ -112,16 +113,36 @@ public class Main extends Application {
                 labelplayer2score.textProperty().bind(player2Score);
 
                 map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
-                    left = e.getCode() == KeyCode.LEFT;
-                    right = e.getCode() == KeyCode.RIGHT;
-                    m = e.getCode() == KeyCode.M;
-                    up = e.getCode() == KeyCode.UP;
-                    down = e.getCode() == KeyCode.DOWN;
-                    w = e.getCode() == KeyCode.W;
-                    s = e.getCode() == KeyCode.S;
-                    a = e.getCode() == KeyCode.A;
-                    d = e.getCode() == KeyCode.D;
-                    q = e.getCode() == KeyCode.Q;
+                    if (e.getCode() == KeyCode.LEFT) {
+                        left = true;
+                    }
+                    if (e.getCode() == KeyCode.RIGHT) {
+                        right = true;
+                    }
+                    if (e.getCode() == KeyCode.M) {
+                        m = true;
+                    }
+                    if (e.getCode() == KeyCode.UP) {
+                        up = true;
+                    }
+                    if (e.getCode() == KeyCode.DOWN) {
+                        down = true;
+                    }
+                    if (e.getCode() == KeyCode.W) {
+                        w = true;
+                    }
+                    if (e.getCode() == KeyCode.S) {
+                        s = true;
+                    }
+                    if (e.getCode() == KeyCode.A) {
+                        a = true;
+                    }
+                    if (e.getCode() == KeyCode.D) {
+                        d = true;
+                    }
+                    if (e.getCode() == KeyCode.Q) {
+                        q = true;
+                    }
                 });
 
                 map1p.getScene().setOnKeyReleased(e -> { //Creates listener for key releases and sets boolean values for usage in the KeyCheck method.
@@ -206,17 +227,38 @@ public class Main extends Application {
                 addToGame(player2, 455, 30, map2p);
                 gameStarted = true;
                 map2p.getScene().setOnKeyPressed(e -> {
-                    left = e.getCode() == KeyCode.LEFT;
-                    right = e.getCode() == KeyCode.RIGHT;
-                    m = e.getCode() == KeyCode.M;
-                    up = e.getCode() == KeyCode.UP;
-                    down = e.getCode() == KeyCode.DOWN;
-                    w = e.getCode() == KeyCode.W;
-                    s = e.getCode() == KeyCode.S;
-                    a = e.getCode() == KeyCode.A;
-                    d = e.getCode() == KeyCode.D;
-                    q = e.getCode() == KeyCode.Q;
+                    if (e.getCode() == KeyCode.LEFT) {
+                        left = true;
+                    }
+                    if (e.getCode() == KeyCode.RIGHT) {
+                        right = true;
+                    }
+                    if (e.getCode() == KeyCode.M) {
+                        m = true;
+                    }
+                    if (e.getCode() == KeyCode.UP) {
+                        up = true;
+                    }
+                    if (e.getCode() == KeyCode.DOWN) {
+                        down = true;
+                    }
+                    if (e.getCode() == KeyCode.W) {
+                        w = true;
+                    }
+                    if (e.getCode() == KeyCode.S) {
+                        s = true;
+                    }
+                    if (e.getCode() == KeyCode.A) {
+                        a = true;
+                    }
+                    if (e.getCode() == KeyCode.D) {
+                        d = true;
+                    }
+                    if (e.getCode() == KeyCode.Q) {
+                        q = true;
+                    }
                 });
+
                 map2p.getScene().setOnKeyReleased(e -> {
                     if (e.getCode() == KeyCode.LEFT) {
                         left = false;
@@ -276,7 +318,6 @@ public class Main extends Application {
                 createWall(60, 10, 355, 225, map3p);
                 createWall(10, 90, 415, 225, map3p);
                 createWall(10, 125, 455, 0, map3p);
-                createWall(10, 125, 455, 0, map3p);
                 createWall(60, 10, 455, 125, map3p);
                 createWall(10, 110, 505, 125, map3p);
 
@@ -300,17 +341,38 @@ public class Main extends Application {
                 gameStarted = true;
                 primaryStage.setScene(map3);
                 map3.setOnKeyPressed(e -> {
-                    left = e.getCode() == KeyCode.LEFT;
-                    right = e.getCode() == KeyCode.RIGHT;
-                    m = e.getCode() == KeyCode.M;
-                    up = e.getCode() == KeyCode.UP;
-                    down = e.getCode() == KeyCode.DOWN;
-                    w = e.getCode() == KeyCode.W;
-                    s = e.getCode() == KeyCode.S;
-                    a = e.getCode() == KeyCode.A;
-                    d = e.getCode() == KeyCode.D;
-                    q = e.getCode() == KeyCode.Q;
+                    if (e.getCode() == KeyCode.LEFT) {
+                        left = true;
+                    }
+                    if (e.getCode() == KeyCode.RIGHT) {
+                        right = true;
+                    }
+                    if (e.getCode() == KeyCode.M) {
+                        m = true;
+                    }
+                    if (e.getCode() == KeyCode.UP) {
+                        up = true;
+                    }
+                    if (e.getCode() == KeyCode.DOWN) {
+                        down = true;
+                    }
+                    if (e.getCode() == KeyCode.W) {
+                        w = true;
+                    }
+                    if (e.getCode() == KeyCode.S) {
+                        s = true;
+                    }
+                    if (e.getCode() == KeyCode.A) {
+                        a = true;
+                    }
+                    if (e.getCode() == KeyCode.D) {
+                        d = true;
+                    }
+                    if (e.getCode() == KeyCode.Q) {
+                        q = true;
+                    }
                 });
+
                 map3.setOnKeyReleased(e -> {
                     if (e.getCode() == KeyCode.LEFT) {
                         left = false;
@@ -361,14 +423,16 @@ public class Main extends Application {
      */
     private static void colDetect(Tank player) {
         for (Rectangle wall : walls) {
-            if (player.isHitting(wall)) {
+            if (player.isHitting(wall) && collisionup) {
                 player.updateLocation(-1.75);
             }
+            else if (player.isHitting(wall) && !collisionup)
+                player.updateLocation(1.75);
         }
     }
 
     /*
-    Doesnt take input because bullets interract with everything and the bullet arraylist is global.
+    Doesnt take input because bullets interact with everything and the bullet arraylist is global.
     For every bullet that has been shot, check if it's hit each wall, and if it's hit a wall:
     Check if the wall is vertical (Width of 10), if it is, invert the X velocity of the bullet
     Check fi the wall is horizontal (width of 10), if it is, invert the Y velocity of the bullet
@@ -472,7 +536,7 @@ public class Main extends Application {
 
     /*
     Checks if the game is started to prevent NullPointerException errors
-    Checks collision detection for each loop interation
+    Checks collision detection for each loop iteration
     Checks if a player is dead and resets the match if that happened
 
     All the cases in the switch statement do the same thing, just for different maps.
@@ -535,8 +599,6 @@ public class Main extends Application {
                     count++;
                     break;
             }
-
-
         }
     }
 
@@ -546,24 +608,90 @@ public class Main extends Application {
     private void keyCheck(Pane map) {
         if (left) { //If left is true it runs the left turn logic
             for (Rectangle wall : walls) { //For every wall in the array list, check if the player is touching one and prevent turning if it is.
-                if (player1.isHitting(wall))
+                if (player1.isHitting(wall)) {
                     notTouching = false;
+                    player1.rotateRight();
+                }
+            }
+            if (notTouching) {
+                    player1.rotateLeft(); //Only turn if it's not touching the wall
+            }
+            notTouching = true;
         }
-        if (notTouching) {
-                player1.rotateLeft(); //Only turn if it's not touching the wall
-        }
-        notTouching = true;
-    }
-        if (right) { //Same as left logic but for right turning
-            for (Rectangle wall: walls) {
-                if (player1.isHitting(wall))
+        if (right) {
+            for (Rectangle wall : walls) {
+                if (player1.isHitting(wall)) {
                     notTouching = false;
+                    player1.rotateLeft();
+                }
             }
             if (notTouching) {
                 player1.rotateRight();
             }
             notTouching = true;
         }
+
+        if (up) {
+            player1.updateLocation(1.75); //Updates the players location (Constant is for changing direction/speed)
+            for (Rectangle wall : walls) {
+                if (player1.isHitting(wall)) {
+                    collisionup = true;
+                    colDetect(player1);
+                }
+            }
+        }
+
+        if (down) { //Same logic as up, but if it's going into a wall make it go forward instead of back.
+            player1.updateLocation(-1.75);
+            for (Rectangle wall : walls) {
+                if (player1.isHitting(wall)) {
+                    collisionup = false;
+                    colDetect(player1);
+                }
+            }
+        }
+
+        if (w)
+            player2.updateLocation(1.75); //Below this repeats the logic above for the other player
+        for (Rectangle wall : walls) {
+            if (player2.isHitting(wall)) {
+                collisionup = true;
+                colDetect(player2);
+            }
+        }
+
+        if (s) {
+            player2.updateLocation(-1.75);
+            for (Rectangle wall : walls) {
+                if (player2.isHitting(wall)) {
+                    collisionup = false;
+                    colDetect(player2);
+                }
+            }
+        }
+        if (a) {
+            for (Rectangle wall : walls) {
+                if (player2.isHitting(wall))
+                    notTouching = false;
+                    player2.rotateRight();
+            }
+            if (notTouching) {
+                player2.rotateLeft();
+            }
+
+        }
+        if (d) {
+            for (Rectangle wall : walls) {
+                if (player2.isHitting(wall))
+                    notTouching = false;
+                player2.rotateLeft();
+            }
+            if (notTouching) {
+                player2.rotateRight();
+            }
+            notTouching = true;
+        }
+
         if (m && readyToShoot) { //Checks if M is true and the player is allowed to shoot again
             if (player1.alive()) { //Checks if the player is actually alive
                 Bullet bullet = new Bullet(); //Creates a new bullet
@@ -572,39 +700,7 @@ public class Main extends Application {
                 readyToShoot = false; //Sets the player to not be ready to shoot.
             }
         }
-        if (up) {
-            player1.updateLocation(1.75); //Updates the players location (Constant is for changing direction/speed)
-        }
-        if (down) { //Same logic as up, but if it's going into a wall make it go forward instead of back.
-            player1.updateLocation(-1.75);
-            for (Rectangle wall : walls) {
-                if (player1.isHitting(wall)) {
-                    player1.updateLocation(2);
-                }
-            }
-        }
-        if (w)
-            player2.updateLocation(1.75); //Below this repeats the logic above for the other player
-        if (s) {
-            player2.updateLocation(-1.75);
-            for (Rectangle wall : walls) {
-                if (player2.isHitting(wall)) {
-                    player2.updateLocation(1.75);
-                }
-            }
-        }
-        if (a) {
-            for (Rectangle wall : walls) {
-                if (!player2.isHitting(wall))
-                    player2.rotateLeft();
-            }
-        }
-        if (d) {
-            for (Rectangle wall : walls) {
-                if (!player2.isHitting(wall))
-                    player2.rotateRight();
-            }
-        }
+
         if (q) {
             if (player2.alive()) {
                 Bullet bullet = new Bullet();
