@@ -673,7 +673,6 @@ public class Main extends Application {
             for (Rectangle wall : walls) {
                 if (player2.isHitting(wall))
                     notTouching = false;
-                    player2.rotateRight();
             }
             if (notTouching) {
                 player2.rotateLeft();
@@ -684,7 +683,6 @@ public class Main extends Application {
             for (Rectangle wall : walls) {
                 if (player2.isHitting(wall))
                     notTouching = false;
-                player2.rotateLeft();
             }
             if (notTouching) {
                 player2.rotateRight();
