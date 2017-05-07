@@ -34,11 +34,11 @@ public class Main extends Application {
     private static boolean gameStarted;
     private static boolean readyToShoot = false;
     private static boolean notTouching = true;
-    private static SimpleStringProperty player1Score;
-    private static SimpleStringProperty player2Score;
+    private static int player1Score = 0;
+    private static int player2Score = 0;
     private static int score2 = 0, score1 = 0;
-    private static Label labelplayer1score = new Label("");
-    private static Label labelplayer2score = new Label("");
+    private static Label labelplayer1score = new Label("Player 1: " + player1Score);
+    private static Label labelplayer2score = new Label("Player 2: " + player2Score);
     private static boolean collisionup = false;
 
 
@@ -65,7 +65,6 @@ public class Main extends Application {
                 break;
             case MAP1:
                 currentMap = 1; //Tells us that it's on Map 1..
-                map1 = new Scene(map1p, 600, 400); //Initializes Map1
                 primaryStage.setScene(map1); //Sets the scene to map1
                 player1 = new Tank();
                 player2 = new Tank(); //Creates both tanks
@@ -101,16 +100,12 @@ public class Main extends Application {
                 labelplayer1score.setFont(new Font("Arial", 10));
                 labelplayer1score.setTextFill(Color.WHITE);
                 map1p.getChildren().add(labelplayer1score);
-                player1Score = new SimpleStringProperty("Player 1: 0");
-                labelplayer1score.textProperty().bind(player1Score);
 
                 labelplayer2score.setTranslateX(548);
                 labelplayer2score.setTranslateY(390);
                 labelplayer2score.setFont(new Font("Arial", 10));
                 labelplayer2score.setTextFill(Color.WHITE);
                 map1p.getChildren().add(labelplayer2score);
-                player2Score = new SimpleStringProperty("Player 2: 0");
-                labelplayer2score.textProperty().bind(player2Score);
 
                 map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
                     if (e.getCode() == KeyCode.LEFT) {
@@ -176,6 +171,7 @@ public class Main extends Application {
                     }
                     if (e.getCode() == KeyCode.Q) {
                         q = false;
+                        readyToShoot = true;
                     }
                 });
                 break;
@@ -219,7 +215,6 @@ public class Main extends Application {
                 labelplayer2score.setTextFill(Color.WHITE);
                 map2p.getChildren().add(labelplayer2score);
 
-                map2 = new Scene(map2p, 600, 400);
                 primaryStage.setScene(map2);
                 player1 = new Tank();
                 player2 = new Tank();
@@ -333,7 +328,6 @@ public class Main extends Application {
                 labelplayer2score.setTextFill(Color.WHITE);
                 map3p.getChildren().add(labelplayer2score);
 
-                map3 = new Scene(map3p, 600, 400);
                 player1 = new Tank();
                 player2 = new Tank();
                 addToGame(player1, 120, 115, map3p);
@@ -467,6 +461,9 @@ public class Main extends Application {
         map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
         map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
         map3p = FXMLLoader.load(getClass().getResource("map.fxml"));
+        map1 = new Scene(map1p, 600, 400); //Initializes Map1
+        map2 = new Scene(map2p, 600, 400);
+        map3 = new Scene(map3p, 600, 400);
 
 
         /*
@@ -501,7 +498,6 @@ public class Main extends Application {
 
     Clears the walls array list to stop people from being blocked by non-existant walls
     Clears the bullet array list just because
-    Sets the game to the next map in the cycle (Throws IOException :( )
      */
     private void resetMatch() {
         switch (currentMap) {
@@ -541,7 +537,7 @@ public class Main extends Application {
 
     All the cases in the switch statement do the same thing, just for different maps.
     Starts by checking key presses/releases
-    If a bullet was shot 20 iterations ago, check kill dtection. Otherwise your own bullet will kill you.
+    If a bullet was shot 20 iterations ago, check kill detection. Otherwise your own bullet will kill you.
     Check bullet collision
     Updates the location of every bullet, and checks if they should be removed/killed
 
@@ -566,9 +562,17 @@ public class Main extends Application {
                         bullet.updateLocation(1);
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map1p.getChildren().remove(bullet.getView());
+                            bullet.setStatus(false);
                         }
                     }
+                    for (int i = 0; i < bullets.size() ; i++) {
+                        if (bullets.get(i).dead())
+                            bullets.remove(i);
+
+                    }
                     count++;
+                    labelplayer1score.setText("Player 1: " + player1Score);
+                    labelplayer2score.setText("Player 2: " + player2Score);
                     break;
                 case 2:
                     keyCheck(map2p);
@@ -580,9 +584,17 @@ public class Main extends Application {
                         bullet.updateLocation(1);
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map2p.getChildren().remove(bullet.getView());
+                            bullet.setStatus(false);
                         }
                     }
+                    for (int i = 0; i < bullets.size() ; i++) {
+                        if (bullets.get(i).dead())
+                            bullets.remove(i);
+
+                    }
                     count++;
+                    labelplayer1score.setText("Player 1: " + player1Score);
+                    labelplayer2score.setText("Player 2: " + player2Score);
                     break;
                 case 3:
                     keyCheck(map3p);
@@ -594,9 +606,17 @@ public class Main extends Application {
                         bullet.updateLocation(1);
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map3p.getChildren().remove(bullet.getView());
+                            bullet.setStatus(false);
                         }
                     }
+                    for (int i = 0; i < bullets.size() ; i++) {
+                        if (bullets.get(i).dead())
+                            bullets.remove(i);
+
+                    }
                     count++;
+                    labelplayer1score.setText("Player 1: " + player1Score);
+                    labelplayer2score.setText("Player 2: " + player2Score);
                     break;
             }
         }
@@ -699,12 +719,12 @@ public class Main extends Application {
             }
         }
 
-        if (q) {
+        if (q && readyToShoot) {
             if (player2.alive()) {
                 Bullet bullet = new Bullet();
-                bullet.setVelocity(player2.getVelocity().normalize().multiply(5));
+                bullet.setVelocity(player2.getVelocity().normalize().multiply(3));
                 addBullet(bullet, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
-                count = 0;
+                readyToShoot = false;
             }
         }
     }
@@ -721,16 +741,14 @@ public class Main extends Application {
                 map.getChildren().remove(player1.getView());
                 System.out.println("player 1 dead");
                 map.getChildren().remove(bullet.getView());
-                score2++;
-                player2Score.set("Player 2: " + score2);
+                player2Score++;
             }
             if (bullet.isHitting(player2.getView())) {
                 player2.setStatus(false);
                 map.getChildren().remove(player2.getView());
                 map.getChildren().remove(bullet.getView());
                 System.out.println("player 2 dead");
-                score1++;
-                player1Score.set("Player 1: " + score1);
+                player1Score++;
             }
         }
     }
