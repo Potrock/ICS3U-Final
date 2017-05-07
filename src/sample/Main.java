@@ -9,6 +9,7 @@ TO DO:
 - Fix main menu (Start button isn't chopped off)
 - Multiple round option (so no error after map 3)
 - Bullets hitting top of a wall
+- spamming shoot causes killdetect to malfunction and score increases by improper amount
  */
 
 package sample;
