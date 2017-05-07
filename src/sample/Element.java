@@ -3,11 +3,13 @@ package sample;
 import javafx.scene.Node;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Shape;
 
 /**
  * Created by pwbla on 2017-04-24.
  */
-class Element {
+class Element extends Shape {
 
     /*
     The Element class is for all the game objects, it contains the methods that each object is going to need on top of the native JavaFX methods.
@@ -75,7 +77,7 @@ class Element {
     /*
     Gets the rotation of the object, native to JavaFX.
      */
-    private double getRotate() {
+    public double getRotation() {
         return view.getRotate();
     }
 
@@ -91,7 +93,7 @@ class Element {
      */
     void rotateRight() {
         view.setRotate(view.getRotate() + 5);
-        setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
+        setVelocity(new Point2D(Math.cos(Math.toRadians(getRotation())), Math.sin(Math.toRadians(getRotation()))));
     }
 
     /*
@@ -99,7 +101,7 @@ class Element {
      */
     void rotateLeft() {
         view.setRotate(view.getRotate() - 5);
-        setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
+        setVelocity(new Point2D(Math.cos(Math.toRadians(getRotation())), Math.sin(Math.toRadians(getRotation()))));
     }
 
     /*
@@ -109,5 +111,13 @@ class Element {
         return getView().getBoundsInParent().intersects(other.getBoundsInParent());
     }
 
+    void setTexture(Paint value) {
+        this.setFill(value);
+    }
+
+    @Override
+    public com.sun.javafx.geom.Shape impl_configShape() {
+        return null;
+    }
 
 }

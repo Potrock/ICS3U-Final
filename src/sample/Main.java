@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -61,9 +62,10 @@ public class Main extends Application {
                 break;
             case MAP1:
                 currentMap = 1; //Tells us that it's on Map 1..
-                map1 = new Scene(map1p, 600, 400); //Initializes Map1
+                map1p.getChildren().clear();
                 primaryStage.setScene(map1); //Sets the scene to map1
                 player1 = new Tank();
+                player1.setTexture(Color.BLACK);
                 player2 = new Tank(); //Creates both tanks
                 addToGame(player1, 30, 285, map1p);
                 addToGame(player2, 525, 255, map1p);
@@ -156,6 +158,7 @@ public class Main extends Application {
                 See explanation for Map 1
                  */
                 currentMap = 2;
+                map2p.getChildren().clear();
                 createWall(10, 400, 0, 0, map2p);
                 createWall(10, 400, 590, 0, map2p);
                 createWall(600, 10, 0, 0, map2p);
@@ -179,7 +182,6 @@ public class Main extends Application {
                 createWall(130, 10, 490, 240, map2p);
                 createWall(10, 80, 490, 240, map2p);
 
-                labelplayer1score = ("Player 1: " + player1Score);
                 labelplayer1score.setTranslateX(0);
                 labelplayer1score.setTranslateY(390);
                 labelplayer1score.setFont(new Font("Arial", 10));
@@ -192,7 +194,6 @@ public class Main extends Application {
                 labelplayer2score.setTextFill(Color.WHITE);
                 map2p.getChildren().add(labelplayer2score);
 
-                map2 = new Scene(map2p, 600, 400);
                 primaryStage.setScene(map2);
                 player1 = new Tank();
                 player2 = new Tank();
@@ -250,6 +251,7 @@ public class Main extends Application {
                 See explanation for Map 1
                  */
                 currentMap = 3;
+                map3p.getChildren().clear();
                 createWall(10, 400, 0, 0, map3p);
                 createWall(10, 400, 590, 0, map3p);
                 createWall(600, 10, 0, 0, map3p);
@@ -286,7 +288,6 @@ public class Main extends Application {
                 labelplayer2score.setTextFill(Color.WHITE);
                 map3p.getChildren().add(labelplayer2score);
 
-                map3 = new Scene(map3p, 600, 400);
                 player1 = new Tank();
                 player2 = new Tank();
                 addToGame(player1, 120, 115, map3p);
@@ -397,6 +398,9 @@ public class Main extends Application {
         map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
         map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
         map3p = FXMLLoader.load(getClass().getResource("map.fxml"));
+        map1 = new Scene(map1p, 600, 400);
+        map2 = new Scene(map2p,600,400);
+        map3 = new Scene(map3p,600,400);
 
 
         /*
@@ -481,6 +485,8 @@ public class Main extends Application {
         if (gameStarted) {
             colDetect(player1);
             colDetect(player2);
+            labelplayer1score = new Label("Player 2: " + player1Score);
+            labelplayer2score = new Label("Player 2: " + player2Score);
             if (player1.dead())
                 resetMatch();
             if (player2.dead())
@@ -494,10 +500,13 @@ public class Main extends Application {
                     for (Element bullet : bullets) {
                         bullet.counter++;
                         bullet.updateLocation(1);
-                        if (bullet.getCounter() > 300 || bullet.dead()) {
-                            map1p.getChildren().remove(bullet.getView());
-                        }
                     }
+                            for (int i = 0; i < bullets.size(); i++) {
+                                if (bullets.get(i).getCounter() > 300 || bullets.get(i).dead()) {
+                                    map1p.getChildren().remove(bullets.get(i).getView());
+                                    bullets.remove(i);
+                            }
+                        }
                     count++;
                     break;
                 case 2:
@@ -508,8 +517,11 @@ public class Main extends Application {
                     for (Element bullet : bullets) {
                         bullet.counter++;
                         bullet.updateLocation(1);
-                        if (bullet.getCounter() > 300 || bullet.dead()) {
-                            map2p.getChildren().remove(bullet.getView());
+                    }
+                    for (int i = 0; i < bullets.size(); i++) {
+                        if (bullets.get(i).getCounter() > 300 || bullets.get(i).dead()) {
+                            map2p.getChildren().remove(bullets.get(i).getView());
+                            bullets.remove(i);
                         }
                     }
                     count++;
@@ -522,8 +534,11 @@ public class Main extends Application {
                     for (Element bullet : bullets) {
                         bullet.counter++;
                         bullet.updateLocation(1);
-                        if (bullet.getCounter() > 300 || bullet.dead()) {
-                            map3p.getChildren().remove(bullet.getView());
+                    }
+                    for (int i = 0; i < bullets.size(); i++) {
+                        if (bullets.get(i).getCounter() > 300 || bullets.get(i).dead()) {
+                            map3p.getChildren().remove(bullets.get(i).getView());
+                            bullets.remove(i);
                         }
                     }
                     count++;
@@ -542,14 +557,14 @@ public class Main extends Application {
             for (Rectangle wall : walls) { //For every wall in the array list, check if the player is touching one and prevent turning if it is.
                 if (player1.isHitting(wall))
                     notTouching = false;
-        }
-        if (notTouching) {
+            }
+            if (notTouching) {
                 player1.rotateLeft(); //Only turn if it's not touching the wall
+            }
+            notTouching = true;
         }
-        notTouching = true;
-    }
         if (right) { //Same as left logic but for right turning
-            for (Rectangle wall: walls) {
+            for (Rectangle wall : walls) {
                 if (player1.isHitting(wall))
                     notTouching = false;
             }
@@ -589,22 +604,30 @@ public class Main extends Application {
         }
         if (a) {
             for (Rectangle wall : walls) {
-                if (!player2.isHitting(wall))
-                    player2.rotateLeft();
+                if (player2.isHitting(wall))
+                    notTouching = false;
             }
+            if (notTouching) {
+                player2.rotateLeft();
+            }
+            notTouching = true;
         }
         if (d) {
             for (Rectangle wall : walls) {
-                if (!player2.isHitting(wall))
-                    player2.rotateRight();
+                if (player2.isHitting(wall))
+                    notTouching = false;
             }
+            if (notTouching) {
+                player2.rotateRight();
+            }
+            notTouching = true;
         }
-        if (q) {
-            if (player2.alive()) {
+        if (q && readyToShoot) {
+            if (player1.alive()) {
                 Bullet bullet = new Bullet();
-                bullet.setVelocity(player2.getVelocity().normalize().multiply(5));
-                addBullet(bullet, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
-                count = 0;
+                bullet.setVelocity(player1.getVelocity().normalize().multiply(3));
+                addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map);
+                readyToShoot = false;
             }
         }
     }
@@ -651,6 +674,10 @@ public class Main extends Application {
         Tank() {
             super(new Rectangle(25, 25, Color.BLUE));
         }
+        @Override
+        void setTexture(Paint value) {
+            super.setFill(value);
+        }
 
     }
 
@@ -661,6 +688,10 @@ public class Main extends Application {
     static class Bullet extends Element {
         Bullet() {
             super(new Circle(5, 5, 5, Color.BLACK));
+        }
+        @Override
+        void setTexture(Paint value) {
+            super.setFill(value);
         }
     }
 }
