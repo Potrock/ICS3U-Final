@@ -110,6 +110,7 @@ class Element extends Shape {
         return getView().getBoundsInParent().intersects(other.getBoundsInParent());
     }
 
+    //test
     void setTexture(Paint value) {
         this.setFill(value);
     }
