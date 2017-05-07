@@ -1,3 +1,16 @@
+/*
+TO DO:
+- Collision against other tanks
+- Tank not disappearing if it doesn't move and dies
+- Swerving problem still needs to be tweaked
+- Turning corners
+- High score screen
+- Paragraphs about game (1 per person)
+- Fix main menu (Start button isn't chopped off)
+- Multiple round option (so no error after map 3)
+- Bullets hitting top of a wall
+ */
+
 package sample;
 
 import javafx.animation.AnimationTimer;
