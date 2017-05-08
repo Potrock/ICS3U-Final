@@ -16,10 +16,10 @@ package sample;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -37,7 +37,8 @@ public class Main extends Application {
     private static AnchorPane map1p;
     private static AnchorPane map2p;
     private static AnchorPane map3p;
-    private static Scene map1, map2, map3, mainmenu;
+    private static AnchorPane roundinputp;
+    private static Scene map1, map2, map3, mainmenu, roundinput;
     private static Tank player1;
     private static Tank player2;
     private static ArrayList<Element> bullets = new ArrayList<>();
@@ -50,7 +51,6 @@ public class Main extends Application {
     private static boolean notTouching = true;
     private static int player1Score = 0;
     private static int player2Score = 0;
-    private static int score2 = 0, score1 = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score);
     private static Label labelplayer2score = new Label("Player 2: " + player2Score);
     private static boolean collisionup = false;
@@ -77,8 +77,12 @@ public class Main extends Application {
             case MAIN:
                 primaryStage.setScene(mainmenu); //Sets the scene to the main menu, declarations already happened in the start method.
                 break;
+            case ROUNDINPUT:
+                primaryStage.setScene(roundinput);
+                break;
+
             case MAP1:
-                currentMap = 1; //Tells us that it's on Map 1..
+                currentMap = 1; //Tells us that it's on Map 1.
                 primaryStage.setScene(map1); //Sets the scene to map1
                 player1 = new Tank();
                 player2 = new Tank(); //Creates both tanks
@@ -472,13 +476,16 @@ public class Main extends Application {
         primaryStage.show(); //Shows the screen
         primaryStage.setResizable(false); //Disables resizing the screen
         Main.primaryStage = primaryStage;
+
+        roundinputp = FXMLLoader.load(getClass().getResource("roundinput.fxml"));
+        roundinput = new Scene(roundinputp, 600, 400);
+
         map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
         map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
         map3p = FXMLLoader.load(getClass().getResource("map.fxml"));
         map1 = new Scene(map1p, 600, 400); //Initializes Map1
         map2 = new Scene(map2p, 600, 400);
         map3 = new Scene(map3p, 600, 400);
-
 
         /*
         Creates an animation that will run the handle method x times per second (60fps masterrace)
@@ -772,6 +779,7 @@ public class Main extends Application {
      */
     public enum gameState {
         MAIN,
+        ROUNDINPUT,
         MAP1,
         MAP2,
         MAP3

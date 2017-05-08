@@ -17,7 +17,15 @@ public class Controller {
     private Button exitbtn;
 
     @FXML
+    private Button playbtn;
+
+    @FXML
     void startOnAction(ActionEvent event) throws IOException {
+        Main.setGameState(Main.gameState.ROUNDINPUT);
+    }
+
+    @FXML
+    void playOnAction (ActionEvent event) throws IOException {
         Main.setGameState(Main.gameState.MAP1);
     }
 
