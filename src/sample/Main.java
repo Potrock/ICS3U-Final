@@ -21,10 +21,13 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -82,6 +85,9 @@ public class Main extends Application {
                 break;
 
             case MAP1:
+                map1p.getChildren().clear();
+                map2p.getChildren().clear();
+                map3p.getChildren().clear();
                 currentMap = 1; //Tells us that it's on Map 1.
                 primaryStage.setScene(map1); //Sets the scene to map1
                 player1 = new Tank();
@@ -197,6 +203,9 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
+                map1p.getChildren().clear();
+                map2p.getChildren().clear();
+                map3p.getChildren().clear();
                 currentMap = 2;
                 createWall(10, 400, 0, 0, map2p);
                 createWall(10, 400, 590, 0, map2p);
@@ -310,6 +319,9 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
+                map1p.getChildren().clear();
+                map2p.getChildren().clear();
+                map3p.getChildren().clear();
                 currentMap = 3;
                 createWall(10, 400, 0, 0, map3p);
                 createWall(10, 400, 590, 0, map3p);
@@ -655,7 +667,7 @@ public class Main extends Application {
                 }
             }
             if (notTouching) {
-                    player1.rotateLeft(); //Only turn if it's not touching the wall
+                player1.rotateLeft(); //Only turn if it's not touching the wall
             }
             notTouching = true;
         }
@@ -792,6 +804,7 @@ public class Main extends Application {
     static class Tank extends Element {
         Tank() {
             super(new Rectangle(25, 25, Color.BLUE));
+            this.setTexture(new ImagePattern(new Image("file:tankboi.png")));
         }
 
     }
@@ -806,4 +819,3 @@ public class Main extends Application {
         }
     }
 }
-
