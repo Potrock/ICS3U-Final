@@ -42,13 +42,13 @@ public class Main extends Application {
     private static ArrayList<Rectangle> walls = new ArrayList<>();
     private static Stage primaryStage;
     private static int count = 0, currentMap = 0, roundCount = 0;
-    public static int totalRounds = 1;
+    static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
     private static boolean gameStarted;
     private static boolean readyToShoot = false;
     private static boolean notTouching = true;
-    public static int player1Score = 0;
-    public static int player2Score = 0;
+    private static int player1Score = 0;
+    private static int player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score);
     private static Label labelplayer2score = new Label("Player 2: " + player2Score);
     private static boolean collisionup = false;
@@ -84,10 +84,8 @@ public class Main extends Application {
                     primaryStage.setScene(mainmenu); //Sets the scene to the main menu, declarations already happened in the start method.
                     break;
                 case ROUNDINPUT:
-
                     primaryStage.setScene(roundinput);
                     break;
-
                 case MAP1:
                     reload1 = 0;
                     reload2 = 0;
@@ -618,9 +616,6 @@ public class Main extends Application {
                 reload1--;
             if (reload2 > 0)
                 reload2--;
-
-            colDetect(player1);
-            colDetect(player2);
             if (player1.dead())
                 resetMatch();
             if (player2.dead())
