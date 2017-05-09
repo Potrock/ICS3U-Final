@@ -1,13 +1,11 @@
 /*
 TO DO:
 - Collision against other tanks
-- Tank not disappearing if it doesn't move and dies
 - Swerving problem still needs to be tweaked
 - Turning corners
-- High score screen
+- High score + ending screen
 - Paragraphs about game (1 per person)
-- Fix main menu (Start button isn't chopped off)
-- Multiple round option (so no error after map 3)
+- Fix main menu (Start button isn't chopped off + add high scores button)
 - Bullets hitting top of a wall
 - spamming shoot causes killdetect to malfunction and score increases by improper amount
  */
