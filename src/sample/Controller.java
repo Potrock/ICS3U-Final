@@ -4,10 +4,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Random;
 
 public class Controller {
 
@@ -21,6 +21,9 @@ public class Controller {
     private Button playbtn;
 
     @FXML
+    public TextField inputField;
+
+    @FXML
     void startOnAction(ActionEvent event) throws IOException {
         Main.setGameState(Main.gameState.ROUNDINPUT);
     }
@@ -28,6 +31,8 @@ public class Controller {
     @FXML
     void playOnAction (ActionEvent event) throws IOException {
         Main.setGameState(Main.gameState.MAP1);
+        Main.totalRounds = Integer.parseInt(inputField.getText());
+        System.out.println(Main.totalRounds);
     }
 
     @FXML

@@ -47,13 +47,13 @@ public class Main extends Application {
     private static ArrayList<Element> bullets = new ArrayList<>();
     private static ArrayList<Rectangle> walls = new ArrayList<>();
     private static Stage primaryStage;
-    private static int count = 0, currentMap = 0;
+    private static int count = 0, currentMap = 0, roundCount = 0;
+    public static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
     private static boolean gameStarted;
     private static boolean readyToShoot = false;
     private static boolean notTouching = true;
-    private static int player1Score = 0;
-    private static int player2Score = 0;
+    private static int player1Score = 0, player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score);
     private static Label labelplayer2score = new Label("Player 2: " + player2Score);
     private static boolean collisionup = false;
@@ -76,361 +76,366 @@ public class Main extends Application {
 
      */
     static void setGameState(gameState gameState) throws IOException {
-        switch (gameState) {
-            case MAIN:
-                primaryStage.setScene(mainmenu); //Sets the scene to the main menu, declarations already happened in the start method.
-                break;
-            case ROUNDINPUT:
-                primaryStage.setScene(roundinput);
-                break;
+        if (roundCount < totalRounds) {
+            switch (gameState) {
+                case MAIN:
+                    primaryStage.setScene(mainmenu); //Sets the scene to the main menu, declarations already happened in the start method.
+                    break;
+                case ROUNDINPUT:
+                    primaryStage.setScene(roundinput);
+                    break;
 
-            case MAP1:
-                map1p.getChildren().clear();
-                map2p.getChildren().clear();
-                map3p.getChildren().clear();
-                currentMap = 1; //Tells us that it's on Map 1.
-                primaryStage.setScene(map1); //Sets the scene to map1
-                player1 = new Tank();
-                player2 = new Tank(); //Creates both tanks
-                addToGame(player1, 30, 285, map1p);
-                addToGame(player2, 525, 255, map1p);
-                gameStarted = true; //Sets game to have started
-                createWall(10, 400, 0, 0, map1p); //These createWall methods all create the layout of the map.
-                createWall(10, 400, 590, 0, map1p);
-                createWall(600, 10, 0, 0, map1p);
-                createWall(600, 10, 0, 390, map1p);
-                createWall(90, 10, 10, 65, map1p);
-                createWall(90, 10, 10, 125, map1p);
-                createWall(150, 10, 10, 190, map1p);
-                createWall(10, 75, 160, 190, map1p);
-                createWall(90, 10, 10, 255, map1p);
-                createWall(90, 10, 10, 320, map1p);
-                createWall(10, 75, 160, 0, map1p);
-                createWall(10, 75, 160, 325, map1p);
-                createWall(10, 75, 250, 325, map1p);
-                createWall(300, 10, 170, 65, map1p);
-                createWall(10, 130, 340, 65, map1p);
-                createWall(10, 75, 250, 125, map1p);
-                createWall(230, 10, 250, 190, map1p);
-                createWall(10, 75, 480, 190, map1p);
-                createWall(125, 10, 475, 125, map1p);
-                createWall(140, 10, 250, 255, map1p);
-                createWall(10, 75, 390, 255, map1p);
-                createWall(210, 10, 390, 330, map1p);
+                case MAP1:
+                    map1p.getChildren().clear();
+                    map2p.getChildren().clear();
+                    map3p.getChildren().clear();
+                    currentMap = 1; //Tells us that it's on Map 1.
+                    primaryStage.setScene(map1); //Sets the scene to map1
+                    player1 = new Tank();
+                    player2 = new Tank(); //Creates both tanks
+                    addToGame(player1, 30, 285, map1p);
+                    addToGame(player2, 525, 255, map1p);
+                    gameStarted = true; //Sets game to have started
+                    createWall(10, 400, 0, 0, map1p); //These createWall methods all create the layout of the map.
+                    createWall(10, 400, 590, 0, map1p);
+                    createWall(600, 10, 0, 0, map1p);
+                    createWall(600, 10, 0, 390, map1p);
+                    createWall(90, 10, 10, 65, map1p);
+                    createWall(90, 10, 10, 125, map1p);
+                    createWall(150, 10, 10, 190, map1p);
+                    createWall(10, 75, 160, 190, map1p);
+                    createWall(90, 10, 10, 255, map1p);
+                    createWall(90, 10, 10, 320, map1p);
+                    createWall(10, 75, 160, 0, map1p);
+                    createWall(10, 75, 160, 325, map1p);
+                    createWall(10, 75, 250, 325, map1p);
+                    createWall(300, 10, 170, 65, map1p);
+                    createWall(10, 130, 340, 65, map1p);
+                    createWall(10, 75, 250, 125, map1p);
+                    createWall(230, 10, 250, 190, map1p);
+                    createWall(10, 75, 480, 190, map1p);
+                    createWall(125, 10, 475, 125, map1p);
+                    createWall(140, 10, 250, 255, map1p);
+                    createWall(10, 75, 390, 255, map1p);
+                    createWall(210, 10, 390, 330, map1p);
 
 
-                labelplayer1score.setTranslateX(0);
-                labelplayer1score.setTranslateY(390);
-                labelplayer1score.setFont(new Font("Arial", 10));
-                labelplayer1score.setTextFill(Color.WHITE);
-                map1p.getChildren().add(labelplayer1score);
+                    labelplayer1score.setTranslateX(0);
+                    labelplayer1score.setTranslateY(390);
+                    labelplayer1score.setFont(new Font("Arial", 10));
+                    labelplayer1score.setTextFill(Color.WHITE);
+                    map1p.getChildren().add(labelplayer1score);
 
-                labelplayer2score.setTranslateX(548);
-                labelplayer2score.setTranslateY(390);
-                labelplayer2score.setFont(new Font("Arial", 10));
-                labelplayer2score.setTextFill(Color.WHITE);
-                map1p.getChildren().add(labelplayer2score);
+                    labelplayer2score.setTranslateX(548);
+                    labelplayer2score.setTranslateY(390);
+                    labelplayer2score.setFont(new Font("Arial", 10));
+                    labelplayer2score.setTextFill(Color.WHITE);
+                    map1p.getChildren().add(labelplayer2score);
 
-                map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
-                    if (e.getCode() == KeyCode.LEFT) {
-                        left = true;
-                    }
-                    if (e.getCode() == KeyCode.RIGHT) {
-                        right = true;
-                    }
-                    if (e.getCode() == KeyCode.M) {
-                        m = true;
-                    }
-                    if (e.getCode() == KeyCode.UP) {
-                        up = true;
-                    }
-                    if (e.getCode() == KeyCode.DOWN) {
-                        down = true;
-                    }
-                    if (e.getCode() == KeyCode.W) {
-                        w = true;
-                    }
-                    if (e.getCode() == KeyCode.S) {
-                        s = true;
-                    }
-                    if (e.getCode() == KeyCode.A) {
-                        a = true;
-                    }
-                    if (e.getCode() == KeyCode.D) {
-                        d = true;
-                    }
-                    if (e.getCode() == KeyCode.Q) {
-                        q = true;
-                    }
-                });
+                    map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
+                        if (e.getCode() == KeyCode.LEFT) {
+                            left = true;
+                        }
+                        if (e.getCode() == KeyCode.RIGHT) {
+                            right = true;
+                        }
+                        if (e.getCode() == KeyCode.M) {
+                            m = true;
+                        }
+                        if (e.getCode() == KeyCode.UP) {
+                            up = true;
+                        }
+                        if (e.getCode() == KeyCode.DOWN) {
+                            down = true;
+                        }
+                        if (e.getCode() == KeyCode.W) {
+                            w = true;
+                        }
+                        if (e.getCode() == KeyCode.S) {
+                            s = true;
+                        }
+                        if (e.getCode() == KeyCode.A) {
+                            a = true;
+                        }
+                        if (e.getCode() == KeyCode.D) {
+                            d = true;
+                        }
+                        if (e.getCode() == KeyCode.Q) {
+                            q = true;
+                        }
+                    });
 
-                map1p.getScene().setOnKeyReleased(e -> { //Creates listener for key releases and sets boolean values for usage in the KeyCheck method.
-                    if (e.getCode() == KeyCode.LEFT) {
-                        left = false;
-                    }
-                    if (e.getCode() == KeyCode.RIGHT) {
-                        right = false;
-                    }
-                    if (e.getCode() == KeyCode.M) {
-                        m = false;
-                        readyToShoot = true;
-                    }
-                    if (e.getCode() == KeyCode.UP) {
-                        up = false;
-                    }
-                    if (e.getCode() == KeyCode.DOWN) {
-                        down = false;
-                    }
-                    if (e.getCode() == KeyCode.W) {
-                        w = false;
-                    }
-                    if (e.getCode() == KeyCode.S) {
-                        s = false;
-                    }
-                    if (e.getCode() == KeyCode.A) {
-                        a = false;
-                    }
-                    if (e.getCode() == KeyCode.D) {
-                        d = false;
-                    }
-                    if (e.getCode() == KeyCode.Q) {
-                        q = false;
-                        readyToShoot = true;
-                    }
-                });
-                break;
-            case MAP2:
+                    map1p.getScene().setOnKeyReleased(e -> { //Creates listener for key releases and sets boolean values for usage in the KeyCheck method.
+                        if (e.getCode() == KeyCode.LEFT) {
+                            left = false;
+                        }
+                        if (e.getCode() == KeyCode.RIGHT) {
+                            right = false;
+                        }
+                        if (e.getCode() == KeyCode.M) {
+                            m = false;
+                            readyToShoot = true;
+                        }
+                        if (e.getCode() == KeyCode.UP) {
+                            up = false;
+                        }
+                        if (e.getCode() == KeyCode.DOWN) {
+                            down = false;
+                        }
+                        if (e.getCode() == KeyCode.W) {
+                            w = false;
+                        }
+                        if (e.getCode() == KeyCode.S) {
+                            s = false;
+                        }
+                        if (e.getCode() == KeyCode.A) {
+                            a = false;
+                        }
+                        if (e.getCode() == KeyCode.D) {
+                            d = false;
+                        }
+                        if (e.getCode() == KeyCode.Q) {
+                            q = false;
+                            readyToShoot = true;
+                        }
+                    });
+                    roundCount++;
+                    break;
+                case MAP2:
                 /*
                 See explanation for Map 1
                  */
-                map1p.getChildren().clear();
-                map2p.getChildren().clear();
-                map3p.getChildren().clear();
-                currentMap = 2;
-                createWall(10, 400, 0, 0, map2p);
-                createWall(10, 400, 590, 0, map2p);
-                createWall(600, 10, 0, 0, map2p);
-                createWall(600, 10, 0, 390, map2p);
-                createWall(90, 10, 0, 165, map2p);
-                createWall(10, 90, 80, 0, map2p);
-                createWall(10, 90, 80, 235, map2p);
-                createWall(10, 160, 160, 80, map2p);
-                createWall(10, 100, 160, 325, map2p);
-                createWall(90, 10, 160, 315, map2p);
-                createWall(10, 90, 240, 235, map2p);
-                createWall(160, 10, 240, 80, map2p);
-                createWall(80, 10, 240, 165, map2p);
-                createWall(10, 160, 315, 80, map2p);
-                createWall(85, 10, 315, 240, map2p);
-                createWall(10, 100, 315, 315, map2p);
-                createWall(10, 100, 390, 315, map2p);
-                createWall(10, 100, 315, 315, map2p);
-                createWall(10, 90, 500, 0, map2p);
-                createWall(110, 10, 400, 165, map2p);
-                createWall(130, 10, 490, 240, map2p);
-                createWall(10, 80, 490, 240, map2p);
+                    map1p.getChildren().clear();
+                    map2p.getChildren().clear();
+                    map3p.getChildren().clear();
+                    currentMap = 2;
+                    createWall(10, 400, 0, 0, map2p);
+                    createWall(10, 400, 590, 0, map2p);
+                    createWall(600, 10, 0, 0, map2p);
+                    createWall(600, 10, 0, 390, map2p);
+                    createWall(90, 10, 0, 165, map2p);
+                    createWall(10, 90, 80, 0, map2p);
+                    createWall(10, 90, 80, 235, map2p);
+                    createWall(10, 160, 160, 80, map2p);
+                    createWall(10, 100, 160, 325, map2p);
+                    createWall(90, 10, 160, 315, map2p);
+                    createWall(10, 90, 240, 235, map2p);
+                    createWall(160, 10, 240, 80, map2p);
+                    createWall(80, 10, 240, 165, map2p);
+                    createWall(10, 160, 315, 80, map2p);
+                    createWall(85, 10, 315, 240, map2p);
+                    createWall(10, 100, 315, 315, map2p);
+                    createWall(10, 100, 390, 315, map2p);
+                    createWall(10, 100, 315, 315, map2p);
+                    createWall(10, 90, 500, 0, map2p);
+                    createWall(110, 10, 400, 165, map2p);
+                    createWall(130, 10, 490, 240, map2p);
+                    createWall(10, 80, 490, 240, map2p);
 
-                labelplayer1score.setTranslateX(0);
-                labelplayer1score.setTranslateY(390);
-                labelplayer1score.setFont(new Font("Arial", 10));
-                labelplayer1score.setTextFill(Color.WHITE);
-                map2p.getChildren().add(labelplayer1score);
+                    labelplayer1score.setTranslateX(0);
+                    labelplayer1score.setTranslateY(390);
+                    labelplayer1score.setFont(new Font("Arial", 10));
+                    labelplayer1score.setTextFill(Color.WHITE);
+                    map2p.getChildren().add(labelplayer1score);
 
-                labelplayer2score.setTranslateX(548);
-                labelplayer2score.setTranslateY(390);
-                labelplayer2score.setFont(new Font("Arial", 10));
-                labelplayer2score.setTextFill(Color.WHITE);
-                map2p.getChildren().add(labelplayer2score);
+                    labelplayer2score.setTranslateX(548);
+                    labelplayer2score.setTranslateY(390);
+                    labelplayer2score.setFont(new Font("Arial", 10));
+                    labelplayer2score.setTextFill(Color.WHITE);
+                    map2p.getChildren().add(labelplayer2score);
 
-                primaryStage.setScene(map2);
-                player1 = new Tank();
-                player2 = new Tank();
-                addToGame(player1, 115, 30, map2p);
-                addToGame(player2, 455, 30, map2p);
-                gameStarted = true;
-                map2p.getScene().setOnKeyPressed(e -> {
-                    if (e.getCode() == KeyCode.LEFT) {
-                        left = true;
-                    }
-                    if (e.getCode() == KeyCode.RIGHT) {
-                        right = true;
-                    }
-                    if (e.getCode() == KeyCode.M) {
-                        m = true;
-                    }
-                    if (e.getCode() == KeyCode.UP) {
-                        up = true;
-                    }
-                    if (e.getCode() == KeyCode.DOWN) {
-                        down = true;
-                    }
-                    if (e.getCode() == KeyCode.W) {
-                        w = true;
-                    }
-                    if (e.getCode() == KeyCode.S) {
-                        s = true;
-                    }
-                    if (e.getCode() == KeyCode.A) {
-                        a = true;
-                    }
-                    if (e.getCode() == KeyCode.D) {
-                        d = true;
-                    }
-                    if (e.getCode() == KeyCode.Q) {
-                        q = true;
-                    }
-                });
+                    primaryStage.setScene(map2);
+                    player1 = new Tank();
+                    player2 = new Tank();
+                    addToGame(player1, 115, 30, map2p);
+                    addToGame(player2, 455, 30, map2p);
+                    gameStarted = true;
+                    map2p.getScene().setOnKeyPressed(e -> {
+                        if (e.getCode() == KeyCode.LEFT) {
+                            left = true;
+                        }
+                        if (e.getCode() == KeyCode.RIGHT) {
+                            right = true;
+                        }
+                        if (e.getCode() == KeyCode.M) {
+                            m = true;
+                        }
+                        if (e.getCode() == KeyCode.UP) {
+                            up = true;
+                        }
+                        if (e.getCode() == KeyCode.DOWN) {
+                            down = true;
+                        }
+                        if (e.getCode() == KeyCode.W) {
+                            w = true;
+                        }
+                        if (e.getCode() == KeyCode.S) {
+                            s = true;
+                        }
+                        if (e.getCode() == KeyCode.A) {
+                            a = true;
+                        }
+                        if (e.getCode() == KeyCode.D) {
+                            d = true;
+                        }
+                        if (e.getCode() == KeyCode.Q) {
+                            q = true;
+                        }
+                    });
 
-                map2p.getScene().setOnKeyReleased(e -> {
-                    if (e.getCode() == KeyCode.LEFT) {
-                        left = false;
-                    }
-                    if (e.getCode() == KeyCode.RIGHT) {
-                        right = false;
-                    }
-                    if (e.getCode() == KeyCode.M) {
-                        m = false;
-                        readyToShoot = true;
-                    }
-                    if (e.getCode() == KeyCode.UP) {
-                        up = false;
-                    }
-                    if (e.getCode() == KeyCode.DOWN) {
-                        down = false;
-                    }
-                    if (e.getCode() == KeyCode.W) {
-                        w = false;
-                    }
-                    if (e.getCode() == KeyCode.S) {
-                        s = false;
-                    }
-                    if (e.getCode() == KeyCode.A) {
-                        a = false;
-                    }
-                    if (e.getCode() == KeyCode.D) {
-                        d = false;
-                    }
-                    if (e.getCode() == KeyCode.Q) {
-                        q = false;
-                    }
-                });
-                break;
-            case MAP3:
+                    map2p.getScene().setOnKeyReleased(e -> {
+                        if (e.getCode() == KeyCode.LEFT) {
+                            left = false;
+                        }
+                        if (e.getCode() == KeyCode.RIGHT) {
+                            right = false;
+                        }
+                        if (e.getCode() == KeyCode.M) {
+                            m = false;
+                            readyToShoot = true;
+                        }
+                        if (e.getCode() == KeyCode.UP) {
+                            up = false;
+                        }
+                        if (e.getCode() == KeyCode.DOWN) {
+                            down = false;
+                        }
+                        if (e.getCode() == KeyCode.W) {
+                            w = false;
+                        }
+                        if (e.getCode() == KeyCode.S) {
+                            s = false;
+                        }
+                        if (e.getCode() == KeyCode.A) {
+                            a = false;
+                        }
+                        if (e.getCode() == KeyCode.D) {
+                            d = false;
+                        }
+                        if (e.getCode() == KeyCode.Q) {
+                            q = false;
+                        }
+                    });
+                    roundCount++;
+                    break;
+                case MAP3:
                 /*
                 See explanation for Map 1
                  */
-                map1p.getChildren().clear();
-                map2p.getChildren().clear();
-                map3p.getChildren().clear();
-                currentMap = 3;
-                createWall(10, 400, 0, 0, map3p);
-                createWall(10, 400, 590, 0, map3p);
-                createWall(600, 10, 0, 0, map3p);
-                createWall(600, 10, 0, 390, map3p);
-                createWall(90, 10, 0, 100, map3p);
-                createWall(90, 10, 0, 225, map3p);
-                createWall(90, 10, 0, 310, map3p);
-                createWall(10, 105, 90, 60, map3p);
-                createWall(95, 10, 90, 160, map3p);
-                createWall(10, 105, 180, 0, map3p);
-                createWall(90, 10, 180, 225, map3p);
-                createWall(420, 10, 180, 310, map3p);
-                createWall(10, 90, 180, 310, map3p);
-                createWall(90, 10, 180, 60, map3p);
-                createWall(10, 100, 270, 60, map3p);
-                createWall(95, 10, 270, 100, map3p);
-                createWall(10, 70, 355, 165, map3p);
-                createWall(60, 10, 355, 225, map3p);
-                createWall(10, 90, 415, 225, map3p);
-                createWall(10, 125, 455, 0, map3p);
-                createWall(60, 10, 455, 125, map3p);
-                createWall(10, 110, 505, 125, map3p);
+                    map1p.getChildren().clear();
+                    map2p.getChildren().clear();
+                    map3p.getChildren().clear();
+                    currentMap = 3;
+                    createWall(10, 400, 0, 0, map3p);
+                    createWall(10, 400, 590, 0, map3p);
+                    createWall(600, 10, 0, 0, map3p);
+                    createWall(600, 10, 0, 390, map3p);
+                    createWall(90, 10, 0, 100, map3p);
+                    createWall(90, 10, 0, 225, map3p);
+                    createWall(90, 10, 0, 310, map3p);
+                    createWall(10, 105, 90, 60, map3p);
+                    createWall(95, 10, 90, 160, map3p);
+                    createWall(10, 105, 180, 0, map3p);
+                    createWall(90, 10, 180, 225, map3p);
+                    createWall(420, 10, 180, 310, map3p);
+                    createWall(10, 90, 180, 310, map3p);
+                    createWall(90, 10, 180, 60, map3p);
+                    createWall(10, 100, 270, 60, map3p);
+                    createWall(95, 10, 270, 100, map3p);
+                    createWall(10, 70, 355, 165, map3p);
+                    createWall(60, 10, 355, 225, map3p);
+                    createWall(10, 90, 415, 225, map3p);
+                    createWall(10, 125, 455, 0, map3p);
+                    createWall(60, 10, 455, 125, map3p);
+                    createWall(10, 110, 505, 125, map3p);
 
-                labelplayer1score.setTranslateX(0);
-                labelplayer1score.setTranslateY(390);
-                labelplayer1score.setFont(new Font("Arial", 10));
-                labelplayer1score.setTextFill(Color.WHITE);
-                map3p.getChildren().add(labelplayer1score);
+                    labelplayer1score.setTranslateX(0);
+                    labelplayer1score.setTranslateY(390);
+                    labelplayer1score.setFont(new Font("Arial", 10));
+                    labelplayer1score.setTextFill(Color.WHITE);
+                    map3p.getChildren().add(labelplayer1score);
 
-                labelplayer2score.setTranslateX(548);
-                labelplayer2score.setTranslateY(390);
-                labelplayer2score.setFont(new Font("Arial", 10));
-                labelplayer2score.setTextFill(Color.WHITE);
-                map3p.getChildren().add(labelplayer2score);
+                    labelplayer2score.setTranslateX(548);
+                    labelplayer2score.setTranslateY(390);
+                    labelplayer2score.setFont(new Font("Arial", 10));
+                    labelplayer2score.setTextFill(Color.WHITE);
+                    map3p.getChildren().add(labelplayer2score);
 
-                player1 = new Tank();
-                player2 = new Tank();
-                addToGame(player1, 120, 115, map3p);
-                addToGame(player2, 315, 60, map3p);
-                gameStarted = true;
-                primaryStage.setScene(map3);
-                map3.setOnKeyPressed(e -> {
-                    if (e.getCode() == KeyCode.LEFT) {
-                        left = true;
-                    }
-                    if (e.getCode() == KeyCode.RIGHT) {
-                        right = true;
-                    }
-                    if (e.getCode() == KeyCode.M) {
-                        m = true;
-                    }
-                    if (e.getCode() == KeyCode.UP) {
-                        up = true;
-                    }
-                    if (e.getCode() == KeyCode.DOWN) {
-                        down = true;
-                    }
-                    if (e.getCode() == KeyCode.W) {
-                        w = true;
-                    }
-                    if (e.getCode() == KeyCode.S) {
-                        s = true;
-                    }
-                    if (e.getCode() == KeyCode.A) {
-                        a = true;
-                    }
-                    if (e.getCode() == KeyCode.D) {
-                        d = true;
-                    }
-                    if (e.getCode() == KeyCode.Q) {
-                        q = true;
-                    }
-                });
+                    player1 = new Tank();
+                    player2 = new Tank();
+                    addToGame(player1, 120, 115, map3p);
+                    addToGame(player2, 315, 60, map3p);
+                    gameStarted = true;
+                    primaryStage.setScene(map3);
+                    map3.setOnKeyPressed(e -> {
+                        if (e.getCode() == KeyCode.LEFT) {
+                            left = true;
+                        }
+                        if (e.getCode() == KeyCode.RIGHT) {
+                            right = true;
+                        }
+                        if (e.getCode() == KeyCode.M) {
+                            m = true;
+                        }
+                        if (e.getCode() == KeyCode.UP) {
+                            up = true;
+                        }
+                        if (e.getCode() == KeyCode.DOWN) {
+                            down = true;
+                        }
+                        if (e.getCode() == KeyCode.W) {
+                            w = true;
+                        }
+                        if (e.getCode() == KeyCode.S) {
+                            s = true;
+                        }
+                        if (e.getCode() == KeyCode.A) {
+                            a = true;
+                        }
+                        if (e.getCode() == KeyCode.D) {
+                            d = true;
+                        }
+                        if (e.getCode() == KeyCode.Q) {
+                            q = true;
+                        }
+                    });
 
-                map3.setOnKeyReleased(e -> {
-                    if (e.getCode() == KeyCode.LEFT) {
-                        left = false;
-                    }
-                    if (e.getCode() == KeyCode.RIGHT) {
-                        right = false;
-                    }
-                    if (e.getCode() == KeyCode.M) {
-                        m = false;
-                        readyToShoot = true;
-                    }
-                    if (e.getCode() == KeyCode.UP) {
-                        up = false;
-                    }
-                    if (e.getCode() == KeyCode.DOWN) {
-                        down = false;
-                    }
-                    if (e.getCode() == KeyCode.W) {
-                        w = false;
-                    }
-                    if (e.getCode() == KeyCode.S) {
-                        s = false;
-                    }
-                    if (e.getCode() == KeyCode.A) {
-                        a = false;
-                    }
-                    if (e.getCode() == KeyCode.D) {
-                        d = false;
-                    }
-                    if (e.getCode() == KeyCode.Q) {
-                        q = false;
-                    }
-                });
-                break;
+                    map3.setOnKeyReleased(e -> {
+                        if (e.getCode() == KeyCode.LEFT) {
+                            left = false;
+                        }
+                        if (e.getCode() == KeyCode.RIGHT) {
+                            right = false;
+                        }
+                        if (e.getCode() == KeyCode.M) {
+                            m = false;
+                            readyToShoot = true;
+                        }
+                        if (e.getCode() == KeyCode.UP) {
+                            up = false;
+                        }
+                        if (e.getCode() == KeyCode.DOWN) {
+                            down = false;
+                        }
+                        if (e.getCode() == KeyCode.W) {
+                            w = false;
+                        }
+                        if (e.getCode() == KeyCode.S) {
+                            s = false;
+                        }
+                        if (e.getCode() == KeyCode.A) {
+                            a = false;
+                        }
+                        if (e.getCode() == KeyCode.D) {
+                            d = false;
+                        }
+                        if (e.getCode() == KeyCode.Q) {
+                            q = false;
+                        }
+                    });
+                    roundCount++;
+                    break;
+            }
         }
     }
 
