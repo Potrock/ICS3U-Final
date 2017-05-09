@@ -24,6 +24,21 @@ public class Controller {
     public TextField inputField;
 
     @FXML
+    private Button submitButton;
+
+    @FXML
+    private Button playAgain;
+
+    @FXML
+    private Button exitButton;
+
+    @FXML
+    void onPlayAgain(ActionEvent event) throws IOException {
+        Main.setGameState(Main.gameState.MAIN);
+        System.out.println("working?");
+    }
+
+    @FXML
     void startOnAction(ActionEvent event) throws IOException {
         Main.setGameState(Main.gameState.ROUNDINPUT);
     }

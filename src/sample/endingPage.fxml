@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <Label layoutX="234.0" layoutY="102.0" text="Game over!">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Button fx:id="submitButton" layoutX="244.0" layoutY="154.0" mnemonicParsing="false" text="Submit scores" />
+      <Button fx:id="exitButton" layoutX="244.0" layoutY="247.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="113.0" text="Exit" onAction="#exitOnAction"/>
+      <Button fx:id="playAgain" layoutX="244.0" layoutY="200.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="113.0" text="Play again" onAction="#onPlayAgain"/>
+   </children>
+</AnchorPane>

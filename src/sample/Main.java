@@ -17,9 +17,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -34,12 +32,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 public class Main extends Application {
     private static AnchorPane map1p;
     private static AnchorPane map2p;
     private static AnchorPane map3p;
+    private static AnchorPane endingPagep;
     private static AnchorPane roundinputp;
-    private static Scene map1, map2, map3, mainmenu, roundinput;
+    private static Scene map1, map2, map3, mainmenu, roundinput, endingPage;
     private static Tank player1;
     private static Tank player2;
     private static ArrayList<Element> bullets = new ArrayList<>();
@@ -51,7 +51,8 @@ public class Main extends Application {
     private static boolean gameStarted;
     private static boolean readyToShoot = false;
     private static boolean notTouching = true;
-    private static int player1Score = 0, player2Score = 0;
+    public static int player1Score = 0;
+    public static int player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score);
     private static Label labelplayer2score = new Label("Player 2: " + player2Score);
     private static boolean collisionup = false;
@@ -77,6 +78,11 @@ public class Main extends Application {
         if (roundCount < totalRounds) {
             switch (gameState) {
                 case MAIN:
+                    map1p.getChildren().clear();
+                    map2p.getChildren().clear();
+                    map3p.getChildren().clear();
+                    endingPagep.getChildren().clear();
+                    roundinputp.getChildren().clear();
                     primaryStage.setScene(mainmenu); //Sets the scene to the main menu, declarations already happened in the start method.
                     break;
                 case ROUNDINPUT:
@@ -433,7 +439,13 @@ public class Main extends Application {
                     });
                     roundCount++;
                     break;
+
             }
+        } else {
+            map1p.getChildren().clear();
+            map2p.getChildren().clear();
+            map3p.getChildren().clear();
+            primaryStage.setScene(endingPage);
         }
     }
 
@@ -494,6 +506,10 @@ public class Main extends Application {
 
         roundinputp = FXMLLoader.load(getClass().getResource("roundinput.fxml"));
         roundinput = new Scene(roundinputp, 600, 400);
+
+        endingPagep = FXMLLoader.load(getClass().getResource("endingPage.fxml"));
+        endingPage = new Scene(endingPagep, 600,400);
+
 
         map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
         map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
