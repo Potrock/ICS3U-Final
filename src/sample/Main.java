@@ -3,7 +3,7 @@ TO DO:
 - Collision against other tanks
 - Swerving problem still needs to be tweaked
 - Turning corners
-- High score + ending screen
+- High score
 - Paragraphs about game (1 per person)
 - Fix main menu (Start button isn't chopped off + add high scores button)
 - Bullets hitting top of a wall
