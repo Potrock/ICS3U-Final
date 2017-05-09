@@ -7,7 +7,6 @@ TO DO:
 - Paragraphs about game (1 per person)
 - Fix main menu (Start button isn't chopped off + add high scores button)
 - Bullets hitting top of a wall
-- spamming shoot causes killdetect to malfunction and score increases by improper amount
  */
 
 package sample;
@@ -18,12 +17,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -56,6 +53,8 @@ public class Main extends Application {
     private static Label labelplayer1score = new Label("Player 1: " + player1Score);
     private static Label labelplayer2score = new Label("Player 2: " + player2Score);
     private static boolean collisionup = false;
+    private static int reload1;
+    private static int reload2;
 
 
 
@@ -86,10 +85,13 @@ public class Main extends Application {
                     primaryStage.setScene(mainmenu); //Sets the scene to the main menu, declarations already happened in the start method.
                     break;
                 case ROUNDINPUT:
+
                     primaryStage.setScene(roundinput);
                     break;
 
                 case MAP1:
+                    reload1 = 0;
+                    reload2 = 0;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -209,6 +211,8 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
+                    reload1 = 0;
+                    reload2 = 0;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -326,6 +330,8 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
+                    reload1 = 0;
+                    reload2 = 0;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -558,6 +564,8 @@ public class Main extends Application {
                     walls.clear();
                     bullets.clear();
                     setGameState(gameState.MAP2);
+                    reload1 = 0;
+                    reload2 = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -567,6 +575,8 @@ public class Main extends Application {
                     walls.clear();
                     bullets.clear();
                     setGameState(gameState.MAP3);
+                    reload1 = 0;
+                    reload2 = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -576,6 +586,8 @@ public class Main extends Application {
                     walls.clear();
                     bullets.clear();
                     setGameState(gameState.MAP1);
+                    reload1 = 0;
+                    reload2 = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -597,6 +609,11 @@ public class Main extends Application {
      */
     private void onUpdate() {
         if (gameStarted) {
+            if (reload1 > 0)
+                reload1--;
+            if (reload2 > 0)
+                reload2--;
+
             colDetect(player1);
             colDetect(player2);
             if (player1.dead())
@@ -762,21 +779,23 @@ public class Main extends Application {
             notTouching = true;
         }
 
-        if (m && readyToShoot) { //Checks if M is true and the player is allowed to shoot again
+        if (m && readyToShoot && reload1 == 0) { //Checks if M is true and the player is allowed to shoot again
             if (player1.alive()) { //Checks if the player is actually alive
                 Bullet bullet = new Bullet(); //Creates a new bullet
                 bullet.setVelocity(player1.getVelocity().normalize().multiply(3)); //Sets the velocity to 3x that of the player who shot it
                 addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map); //Adds the bullet
                 readyToShoot = false; //Sets the player to not be ready to shoot.
+                reload1 = 100;
             }
         }
 
-        if (q && readyToShoot) {
+        if (q && readyToShoot && reload2 == 0) {
             if (player2.alive()) {
                 Bullet bullet = new Bullet();
                 bullet.setVelocity(player2.getVelocity().normalize().multiply(3));
                 addBullet(bullet, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
                 readyToShoot = false;
+                reload2 = 100;
             }
         }
     }
@@ -823,7 +842,7 @@ public class Main extends Application {
     static class Tank extends Element {
         Tank() {
             super(new Rectangle(25, 25, Color.BLUE));
-            this.setTexture(new ImagePattern(new Image("file:tankboi.png")));
+
         }
 
     }
