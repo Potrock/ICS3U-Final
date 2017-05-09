@@ -6,7 +6,6 @@ TO DO:
 - High score
 - Fix main menu (Start button isn't chopped off + add high scores button)
 - Bullets hitting top of a wall
-- Player 2 shooting glitch
  */
 
 package sample;
