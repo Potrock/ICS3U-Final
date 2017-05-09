@@ -34,7 +34,7 @@ public class Controller {
 
     @FXML
     void onPlayAgain(ActionEvent event) throws IOException {
-        Main.setGameState(Main.gameState.MAIN);
+        Main.setGameState(Main.gameState.ROUNDINPUT);
         System.out.println("working?");
     }
 

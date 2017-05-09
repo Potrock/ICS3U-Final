@@ -4,9 +4,9 @@ TO DO:
 - Swerving problem still needs to be tweaked
 - Turning corners
 - High score
-- Paragraphs about game (1 per person)
 - Fix main menu (Start button isn't chopped off + add high scores button)
 - Bullets hitting top of a wall
+- Player 2 shooting glitch
  */
 
 package sample;
@@ -184,6 +184,7 @@ public class Main extends Application {
                         }
                         if (e.getCode() == KeyCode.UP) {
                             up = false;
+                            collisionup = false;
                         }
                         if (e.getCode() == KeyCode.DOWN) {
                             down = false;
@@ -304,6 +305,7 @@ public class Main extends Application {
                         }
                         if (e.getCode() == KeyCode.UP) {
                             up = false;
+                            collisionup = false;
                         }
                         if (e.getCode() == KeyCode.DOWN) {
                             down = false;
@@ -322,6 +324,7 @@ public class Main extends Application {
                         }
                         if (e.getCode() == KeyCode.Q) {
                             q = false;
+                            readyToShoot = true;
                         }
                     });
                     roundCount++;
@@ -423,6 +426,7 @@ public class Main extends Application {
                         }
                         if (e.getCode() == KeyCode.UP) {
                             up = false;
+                            collisionup = false;
                         }
                         if (e.getCode() == KeyCode.DOWN) {
                             down = false;
@@ -441,6 +445,7 @@ public class Main extends Application {
                         }
                         if (e.getCode() == KeyCode.Q) {
                             q = false;
+                            readyToShoot = true;
                         }
                     });
                     roundCount++;
@@ -471,8 +476,9 @@ public class Main extends Application {
             if (player.isHitting(wall) && collisionup) {
                 player.updateLocation(-1.75);
             }
-            else if (player.isHitting(wall) && !collisionup)
+            else if (player.isHitting(wall) && !collisionup) {
                 player.updateLocation(1.75);
+            }
         }
     }
 
@@ -785,7 +791,7 @@ public class Main extends Application {
                 bullet.setVelocity(player1.getVelocity().normalize().multiply(3)); //Sets the velocity to 3x that of the player who shot it
                 addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map); //Adds the bullet
                 readyToShoot = false; //Sets the player to not be ready to shoot.
-                reload1 = 100;
+                reload1 = 150;
             }
         }
 
@@ -795,7 +801,7 @@ public class Main extends Application {
                 bullet.setVelocity(player2.getVelocity().normalize().multiply(3));
                 addBullet(bullet, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
                 readyToShoot = false;
-                reload2 = 100;
+                reload2 = 150;
             }
         }
     }
