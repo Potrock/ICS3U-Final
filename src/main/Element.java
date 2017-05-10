@@ -3,6 +3,7 @@ package main;
 import javafx.scene.Node;
 
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 
@@ -32,6 +33,7 @@ class Element extends Shape {
         view.setTranslateX(view.getTranslateX() + velocity.getX() * constant);
         view.setTranslateY(view.getTranslateY() + velocity.getY() * constant);
     }
+
 
     /*
     Takes in a velocity as an argument and assigns it to the velocity declared above.

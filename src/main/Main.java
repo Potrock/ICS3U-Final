@@ -8,7 +8,6 @@ TO DO:
  */
 
 package main;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +15,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -480,6 +480,9 @@ public class Main extends Application {
                 reload1--;
             if (reload2 > 0)
                 reload2--;
+            if (player1.dead() || player2.dead())
+                resetMatch();
+
             switch (currentMap) {
                 case 1:
                     keyCheck(map1p);
@@ -671,7 +674,6 @@ public class Main extends Application {
                 System.out.println("player 1 dead");
                 map.getChildren().remove(bullet.getView());
                 player2Score++;
-                resetMatch();
             }
             if (bullet.isHitting(player2.getView())) {
                 player2.setStatus(false);
@@ -679,7 +681,6 @@ public class Main extends Application {
                 map.getChildren().remove(bullet.getView());
                 System.out.println("player 2 dead");
                 player1Score++;
-                resetMatch();
             }
         }
     }
@@ -701,8 +702,8 @@ public class Main extends Application {
      */
     static class Tank extends Element {
         Tank() {
-            super(new Rectangle(25, 25, Color.BLUE));
-            this.setTexture(new ImagePattern(new Image("file:tank.gif")));
+            super(new Rectangle(25,25,Color.BLUE));
+            this.setTexture(new ImagePattern(new Image("file:tankimage.png")));
 
         }
 
