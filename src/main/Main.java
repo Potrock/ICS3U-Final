@@ -1,14 +1,13 @@
 /*
 TO DO:
 - Collision against other tanks
-- Swerving problem still needs to be tweaked
+- Settings page for tweaking sensitivity??
 - Turning corners
 - High score
 - Fix main menu (Start button isn't chopped off + add high scores button)
-- Bullets hitting top of a wall
  */
 
-package sample;
+package main;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -16,10 +15,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -30,30 +31,56 @@ import java.util.ArrayList;
 
 
 public class Main extends Application {
-    private static AnchorPane map1p;
-    private static AnchorPane map2p;
-    private static AnchorPane map3p;
-    private static AnchorPane endingPagep;
-    private static AnchorPane roundinputp;
+    private static Stage primaryStage;
+    private static AnchorPane map1p, map2p, map3p;
+    private static AnchorPane endingPagep, roundinputp;
     private static Scene map1, map2, map3, mainmenu, roundinput, endingPage;
-    private static Tank player1;
-    private static Tank player2;
+    private static Tank player1, player2;
     private static ArrayList<Element> bullets = new ArrayList<>();
     private static ArrayList<Rectangle> walls = new ArrayList<>();
-    private static Stage primaryStage;
     private static int count = 0, currentMap = 0, roundCount = 0;
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
-    private static boolean gameStarted;
-    private static boolean readyToShoot = false;
-    private static boolean notTouching = true;
-    private static int player1Score = 0;
-    private static int player2Score = 0;
-    private static Label labelplayer1score = new Label("Player 1: " + player1Score);
-    private static Label labelplayer2score = new Label("Player 2: " + player2Score);
-    private static boolean collisionup = false;
-    private static int reload1;
-    private static int reload2;
+    private static boolean gameStarted, readyToShoot = false, notTouching = true, collisionup = false;
+    private static int player1Score = 0, player2Score = 0;
+    private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
+    private static int reload1, reload2;
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        AnchorPane stage = FXMLLoader.load(getClass().getResource("sample.fxml")); //Gets the main menu from the FXML file
+        mainmenu = new Scene(stage, 400, 400); //Initializes Main Menu Scene
+        primaryStage.setScene(mainmenu); //Sets the scene
+        primaryStage.show(); //Shows the screen
+        primaryStage.setResizable(false); //Disables resizing the screen
+        Main.primaryStage = primaryStage;
+
+        roundinputp = FXMLLoader.load(getClass().getResource("roundinput.fxml"));
+        roundinput = new Scene(roundinputp, 600, 400);
+
+        endingPagep = FXMLLoader.load(getClass().getResource("endingPage.fxml"));
+        endingPage = new Scene(endingPagep, 600,400);
+
+
+        map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
+        map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
+        map3p = FXMLLoader.load(getClass().getResource("map.fxml"));
+        map1 = new Scene(map1p, 600, 400); //Initializes Map1
+        map2 = new Scene(map2p, 600, 400);
+        map3 = new Scene(map3p, 600, 400);
+
+        /*
+        Creates an animation that will run the handle method x times per second (60fps masterrace)
+         */
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                onUpdate();
+            }
+        };
+        timer.start();
+
+    }
 
 
 
@@ -122,87 +149,18 @@ public class Main extends Application {
                     createWall(10, 75, 390, 255, map1p);
                     createWall(210, 10, 390, 330, map1p);
 
-
                     labelplayer1score.setTranslateX(0);
                     labelplayer1score.setTranslateY(390);
                     labelplayer1score.setFont(new Font("Arial", 10));
                     labelplayer1score.setTextFill(Color.WHITE);
                     map1p.getChildren().add(labelplayer1score);
-
                     labelplayer2score.setTranslateX(548);
                     labelplayer2score.setTranslateY(390);
                     labelplayer2score.setFont(new Font("Arial", 10));
                     labelplayer2score.setTextFill(Color.WHITE);
                     map1p.getChildren().add(labelplayer2score);
 
-                    map1p.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
-                        if (e.getCode() == KeyCode.LEFT) {
-                            left = true;
-                        }
-                        if (e.getCode() == KeyCode.RIGHT) {
-                            right = true;
-                        }
-                        if (e.getCode() == KeyCode.M) {
-                            m = true;
-                        }
-                        if (e.getCode() == KeyCode.UP) {
-                            up = true;
-                        }
-                        if (e.getCode() == KeyCode.DOWN) {
-                            down = true;
-                        }
-                        if (e.getCode() == KeyCode.W) {
-                            w = true;
-                        }
-                        if (e.getCode() == KeyCode.S) {
-                            s = true;
-                        }
-                        if (e.getCode() == KeyCode.A) {
-                            a = true;
-                        }
-                        if (e.getCode() == KeyCode.D) {
-                            d = true;
-                        }
-                        if (e.getCode() == KeyCode.Q) {
-                            q = true;
-                        }
-                    });
-
-                    map1p.getScene().setOnKeyReleased(e -> { //Creates listener for key releases and sets boolean values for usage in the KeyCheck method.
-                        if (e.getCode() == KeyCode.LEFT) {
-                            left = false;
-                        }
-                        if (e.getCode() == KeyCode.RIGHT) {
-                            right = false;
-                        }
-                        if (e.getCode() == KeyCode.M) {
-                            m = false;
-                            readyToShoot = true;
-                        }
-                        if (e.getCode() == KeyCode.UP) {
-                            up = false;
-                            collisionup = false;
-                        }
-                        if (e.getCode() == KeyCode.DOWN) {
-                            down = false;
-                        }
-                        if (e.getCode() == KeyCode.W) {
-                            w = false;
-                        }
-                        if (e.getCode() == KeyCode.S) {
-                            s = false;
-                        }
-                        if (e.getCode() == KeyCode.A) {
-                            a = false;
-                        }
-                        if (e.getCode() == KeyCode.D) {
-                            d = false;
-                        }
-                        if (e.getCode() == KeyCode.Q) {
-                            q = false;
-                            readyToShoot = true;
-                        }
-                    });
+                    createListeners(map1p);
                     roundCount++;
                     break;
                 case MAP2:
@@ -243,7 +201,6 @@ public class Main extends Application {
                     labelplayer1score.setFont(new Font("Arial", 10));
                     labelplayer1score.setTextFill(Color.WHITE);
                     map2p.getChildren().add(labelplayer1score);
-
                     labelplayer2score.setTranslateX(548);
                     labelplayer2score.setTranslateY(390);
                     labelplayer2score.setFont(new Font("Arial", 10));
@@ -256,74 +213,7 @@ public class Main extends Application {
                     addToGame(player1, 115, 30, map2p);
                     addToGame(player2, 455, 30, map2p);
                     gameStarted = true;
-                    map2p.getScene().setOnKeyPressed(e -> {
-                        if (e.getCode() == KeyCode.LEFT) {
-                            left = true;
-                        }
-                        if (e.getCode() == KeyCode.RIGHT) {
-                            right = true;
-                        }
-                        if (e.getCode() == KeyCode.M) {
-                            m = true;
-                        }
-                        if (e.getCode() == KeyCode.UP) {
-                            up = true;
-                        }
-                        if (e.getCode() == KeyCode.DOWN) {
-                            down = true;
-                        }
-                        if (e.getCode() == KeyCode.W) {
-                            w = true;
-                        }
-                        if (e.getCode() == KeyCode.S) {
-                            s = true;
-                        }
-                        if (e.getCode() == KeyCode.A) {
-                            a = true;
-                        }
-                        if (e.getCode() == KeyCode.D) {
-                            d = true;
-                        }
-                        if (e.getCode() == KeyCode.Q) {
-                            q = true;
-                        }
-                    });
-
-                    map2p.getScene().setOnKeyReleased(e -> {
-                        if (e.getCode() == KeyCode.LEFT) {
-                            left = false;
-                        }
-                        if (e.getCode() == KeyCode.RIGHT) {
-                            right = false;
-                        }
-                        if (e.getCode() == KeyCode.M) {
-                            m = false;
-                            readyToShoot = true;
-                        }
-                        if (e.getCode() == KeyCode.UP) {
-                            up = false;
-                            collisionup = false;
-                        }
-                        if (e.getCode() == KeyCode.DOWN) {
-                            down = false;
-                        }
-                        if (e.getCode() == KeyCode.W) {
-                            w = false;
-                        }
-                        if (e.getCode() == KeyCode.S) {
-                            s = false;
-                        }
-                        if (e.getCode() == KeyCode.A) {
-                            a = false;
-                        }
-                        if (e.getCode() == KeyCode.D) {
-                            d = false;
-                        }
-                        if (e.getCode() == KeyCode.Q) {
-                            q = false;
-                            readyToShoot = true;
-                        }
-                    });
+                    createListeners(map2p);
                     roundCount++;
                     break;
                 case MAP3:
@@ -364,7 +254,6 @@ public class Main extends Application {
                     labelplayer1score.setFont(new Font("Arial", 10));
                     labelplayer1score.setTextFill(Color.WHITE);
                     map3p.getChildren().add(labelplayer1score);
-
                     labelplayer2score.setTranslateX(548);
                     labelplayer2score.setTranslateY(390);
                     labelplayer2score.setFont(new Font("Arial", 10));
@@ -377,74 +266,7 @@ public class Main extends Application {
                     addToGame(player2, 315, 60, map3p);
                     gameStarted = true;
                     primaryStage.setScene(map3);
-                    map3.setOnKeyPressed(e -> {
-                        if (e.getCode() == KeyCode.LEFT) {
-                            left = true;
-                        }
-                        if (e.getCode() == KeyCode.RIGHT) {
-                            right = true;
-                        }
-                        if (e.getCode() == KeyCode.M) {
-                            m = true;
-                        }
-                        if (e.getCode() == KeyCode.UP) {
-                            up = true;
-                        }
-                        if (e.getCode() == KeyCode.DOWN) {
-                            down = true;
-                        }
-                        if (e.getCode() == KeyCode.W) {
-                            w = true;
-                        }
-                        if (e.getCode() == KeyCode.S) {
-                            s = true;
-                        }
-                        if (e.getCode() == KeyCode.A) {
-                            a = true;
-                        }
-                        if (e.getCode() == KeyCode.D) {
-                            d = true;
-                        }
-                        if (e.getCode() == KeyCode.Q) {
-                            q = true;
-                        }
-                    });
-
-                    map3.setOnKeyReleased(e -> {
-                        if (e.getCode() == KeyCode.LEFT) {
-                            left = false;
-                        }
-                        if (e.getCode() == KeyCode.RIGHT) {
-                            right = false;
-                        }
-                        if (e.getCode() == KeyCode.M) {
-                            m = false;
-                            readyToShoot = true;
-                        }
-                        if (e.getCode() == KeyCode.UP) {
-                            up = false;
-                            collisionup = false;
-                        }
-                        if (e.getCode() == KeyCode.DOWN) {
-                            down = false;
-                        }
-                        if (e.getCode() == KeyCode.W) {
-                            w = false;
-                        }
-                        if (e.getCode() == KeyCode.S) {
-                            s = false;
-                        }
-                        if (e.getCode() == KeyCode.A) {
-                            a = false;
-                        }
-                        if (e.getCode() == KeyCode.D) {
-                            d = false;
-                        }
-                        if (e.getCode() == KeyCode.Q) {
-                            q = false;
-                            readyToShoot = true;
-                        }
-                    });
+                    createListeners(map3p);
                     roundCount++;
                     break;
 
@@ -455,6 +277,78 @@ public class Main extends Application {
             map3p.getChildren().clear();
             primaryStage.setScene(endingPage);
         }
+    }
+
+    private static void createListeners(AnchorPane map) {
+        map.getScene().setOnKeyPressed(e -> { //Creates listener for key presses and sets boolean values for usage in the KeyCheck method
+            if (e.getCode() == KeyCode.LEFT) {
+                left = true;
+            }
+            if (e.getCode() == KeyCode.RIGHT) {
+                right = true;
+            }
+            if (e.getCode() == KeyCode.M) {
+                m = true;
+            }
+            if (e.getCode() == KeyCode.UP) {
+                up = true;
+            }
+            if (e.getCode() == KeyCode.DOWN) {
+                down = true;
+            }
+            if (e.getCode() == KeyCode.W) {
+                w = true;
+            }
+            if (e.getCode() == KeyCode.S) {
+                s = true;
+            }
+            if (e.getCode() == KeyCode.A) {
+                a = true;
+            }
+            if (e.getCode() == KeyCode.D) {
+                d = true;
+            }
+            if (e.getCode() == KeyCode.Q) {
+                q = true;
+            }
+        });
+
+        map.getScene().setOnKeyReleased(e -> { //Creates listener for key releases and sets boolean values for usage in the KeyCheck method.
+            if (e.getCode() == KeyCode.LEFT) {
+                left = false;
+            }
+            if (e.getCode() == KeyCode.RIGHT) {
+                right = false;
+            }
+            if (e.getCode() == KeyCode.M) {
+                m = false;
+                readyToShoot = true;
+            }
+            if (e.getCode() == KeyCode.UP) {
+                up = false;
+                collisionup = false;
+            }
+            if (e.getCode() == KeyCode.DOWN) {
+                down = false;
+            }
+            if (e.getCode() == KeyCode.W) {
+                w = false;
+            }
+            if (e.getCode() == KeyCode.S) {
+                s = false;
+            }
+            if (e.getCode() == KeyCode.A) {
+                a = false;
+            }
+            if (e.getCode() == KeyCode.D) {
+                d = false;
+            }
+            if (e.getCode() == KeyCode.Q) {
+                q = false;
+                readyToShoot = true;
+            }
+        });
+
     }
 
     private static void createWall(int width, int height, int x, int y, Pane map) { //Takes input for the width,e height, coordinates and which Parent the wall should be in
@@ -502,42 +396,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        AnchorPane stage = FXMLLoader.load(getClass().getResource("sample.fxml")); //Gets the main menu from the FXML file
-        mainmenu = new Scene(stage, 400, 400); //Initializes Main Menu Scene
-        primaryStage.setScene(mainmenu); //Sets the scene
-        primaryStage.show(); //Shows the screen
-        primaryStage.setResizable(false); //Disables resizing the screen
-        Main.primaryStage = primaryStage;
-
-        roundinputp = FXMLLoader.load(getClass().getResource("roundinput.fxml"));
-        roundinput = new Scene(roundinputp, 600, 400);
-
-        endingPagep = FXMLLoader.load(getClass().getResource("endingPage.fxml"));
-        endingPage = new Scene(endingPagep, 600,400);
-
-
-        map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
-        map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
-        map3p = FXMLLoader.load(getClass().getResource("map.fxml"));
-        map1 = new Scene(map1p, 600, 400); //Initializes Map1
-        map2 = new Scene(map2p, 600, 400);
-        map3 = new Scene(map3p, 600, 400);
-
-        /*
-        Creates an animation that will run the handle method x times per second (60fps masterrace)
-         */
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                onUpdate();
-            }
-        };
-        timer.start();
-
     }
 
     /*
@@ -616,16 +474,12 @@ public class Main extends Application {
                 reload1--;
             if (reload2 > 0)
                 reload2--;
-            if (player1.dead())
-                resetMatch();
-            if (player2.dead())
-                resetMatch();
             switch (currentMap) {
                 case 1:
                     keyCheck(map1p);
+                    bulletCol();
                     if (count > 20)
                         killDetect(map1p);
-                    bulletCol();
                     for (Element bullet : bullets) {
                         bullet.counter++;
                         bullet.updateLocation(1);
@@ -645,9 +499,9 @@ public class Main extends Application {
                     break;
                 case 2:
                     keyCheck(map2p);
+                    bulletCol();
                     if (count > 20)
                         killDetect(map2p);
-                    bulletCol();
                     for (Element bullet : bullets) {
                         bullet.counter++;
                         bullet.updateLocation(1);
@@ -667,9 +521,9 @@ public class Main extends Application {
                     break;
                 case 3:
                     keyCheck(map3p);
+                    bulletCol();
                     if (count > 20)
                         killDetect(map3p);
-                    bulletCol();
                     for (Element bullet : bullets) {
                         bullet.counter++;
                         bullet.updateLocation(1);
@@ -813,6 +667,7 @@ public class Main extends Application {
                 System.out.println("player 1 dead");
                 map.getChildren().remove(bullet.getView());
                 player2Score++;
+                resetMatch();
             }
             if (bullet.isHitting(player2.getView())) {
                 player2.setStatus(false);
@@ -820,6 +675,7 @@ public class Main extends Application {
                 map.getChildren().remove(bullet.getView());
                 System.out.println("player 2 dead");
                 player1Score++;
+                resetMatch();
             }
         }
     }
@@ -842,6 +698,7 @@ public class Main extends Application {
     static class Tank extends Element {
         Tank() {
             super(new Rectangle(25, 25, Color.BLUE));
+            this.setTexture(new ImagePattern(new Image("file:tank.gif")));
 
         }
 
