@@ -190,7 +190,7 @@ public class Main extends Application {
                     createWall(10, 90, 240, 235, map2p);
                     createWall(160, 10, 240, 80, map2p);
                     createWall(80, 10, 240, 165, map2p);
-                    createWall(10, 160, 315, 80, map2p);
+                    createWall(10, 160, 315, 85, map2p);
                     createWall(85, 10, 315, 240, map2p);
                     createWall(10, 100, 315, 315, map2p);
                     createWall(10, 100, 390, 315, map2p);
@@ -706,7 +706,6 @@ public class Main extends Application {
             this.setTexture(new ImagePattern(new Image("file:tankimage.png")));
 
         }
-
     }
 
     /*
