@@ -41,7 +41,7 @@ public class Main extends Application {
     private static int count = 0, currentMap = 0, roundCount = 0;
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
-    private static boolean gameStarted, readyToShoot = false, notTouching = true, collisionup = false;
+    private static boolean gameStarted, readyToShoot1 = false, readyToShoot2 = false, notTouching = true, collisionup = false;
     private static int player1Score = 0, player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2;
@@ -114,6 +114,8 @@ public class Main extends Application {
                     primaryStage.setScene(roundinput);
                     break;
                 case MAP1:
+                    readyToShoot1 = false;
+                    readyToShoot2 = false;
                     reload1 = 0;
                     reload2 = 0;
                     map1p.getChildren().clear();
@@ -167,6 +169,8 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
+                    readyToShoot1 = false;
+                    readyToShoot2 = false;
                     reload1 = 0;
                     reload2 = 0;
                     map1p.getChildren().clear();
@@ -220,6 +224,8 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
+                    readyToShoot1 = false;
+                    readyToShoot2 = false;
                     reload1 = 0;
                     reload2 = 0;
                     map1p.getChildren().clear();
@@ -322,7 +328,7 @@ public class Main extends Application {
             }
             if (e.getCode() == KeyCode.M) {
                 m = false;
-                readyToShoot = true;
+                readyToShoot1 = true;
             }
             if (e.getCode() == KeyCode.UP) {
                 up = false;
@@ -345,7 +351,7 @@ public class Main extends Application {
             }
             if (e.getCode() == KeyCode.Q) {
                 q = false;
-                readyToShoot = true;
+                readyToShoot2 = true;
             }
         });
 
@@ -633,22 +639,20 @@ public class Main extends Application {
             notTouching = true;
         }
 
-        if (m && readyToShoot && reload1 == 0) { //Checks if M is true and the player is allowed to shoot again
+        if (m && readyToShoot1 && reload1 == 0) { //Checks if M is true and the player is allowed to shoot again
             if (player1.alive()) { //Checks if the player is actually alive
                 Bullet bullet = new Bullet(); //Creates a new bullet
                 bullet.setVelocity(player1.getVelocity().normalize().multiply(3)); //Sets the velocity to 3x that of the player who shot it
                 addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map); //Adds the bullet
-                readyToShoot = false; //Sets the player to not be ready to shoot.
                 reload1 = 150;
             }
         }
 
-        if (q && readyToShoot && reload2 == 0) {
+        if (q && readyToShoot2 && reload2 == 0) {
             if (player2.alive()) {
                 Bullet bullet = new Bullet();
                 bullet.setVelocity(player2.getVelocity().normalize().multiply(3));
                 addBullet(bullet, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
-                readyToShoot = false;
                 reload2 = 150;
             }
         }
