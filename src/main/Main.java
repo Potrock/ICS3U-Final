@@ -15,7 +15,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -25,7 +24,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -91,6 +96,27 @@ public class Main extends Application {
         element.getView().setTranslateX(x);
         element.getView().setTranslateY(y);
         map.getChildren().add(element.getView());
+    }
+
+    public static void submitScore() {
+        try {
+            FileReader reader = new FileReader("src/main/scores.json");
+            JSONArray data = new JSONArray();
+            JSONParser parser = new JSONParser();
+            data = (JSONArray) parser.parse(reader);
+            reader.close();
+
+            FileWriter writer = new FileWriter("src/main/scores.json");
+            JSONObject currentScore = new JSONObject();
+            currentScore.put("Player 1", player1Score);
+            currentScore.put("Player 2", player2Score);
+            data.add(currentScore);
+            writer.write(data.toJSONString());
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

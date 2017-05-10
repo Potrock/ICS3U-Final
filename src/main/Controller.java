@@ -26,20 +26,17 @@ public class Controller {
     private Button submitButton;
 
     @FXML
-    private Button playAgain;
-
-    @FXML
     private Button exitButton;
-
-    @FXML
-    void onPlayAgain(ActionEvent event) throws IOException {
-        Main.setGameState(Main.gameState.ROUNDINPUT);
-        System.out.println("working?");
-    }
 
     @FXML
     void startOnAction(ActionEvent event) throws IOException {
         Main.setGameState(Main.gameState.ROUNDINPUT);
+    }
+
+    @FXML
+    void onSubmit(ActionEvent event) {
+        Main.submitScore();
+        System.out.println("nayce");
     }
 
     @FXML

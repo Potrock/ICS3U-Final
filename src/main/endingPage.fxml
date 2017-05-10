@@ -13,8 +13,7 @@
             <Font size="26.0" />
          </font>
       </Label>
-      <Button fx:id="submitButton" layoutX="244.0" layoutY="154.0" mnemonicParsing="false" text="Submit scores" />
+      <Button fx:id="submitButton" layoutX="244.0" layoutY="154.0" mnemonicParsing="false" text="Submit scores" onAction="#onSubmit"/>
       <Button fx:id="exitButton" layoutX="244.0" layoutY="247.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="113.0" text="Exit" onAction="#exitOnAction"/>
-      <Button fx:id="playAgain" layoutX="244.0" layoutY="200.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="113.0" text="Play again" onAction="#onPlayAgain"/>
    </children>
 </AnchorPane>
