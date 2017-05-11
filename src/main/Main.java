@@ -47,9 +47,10 @@ public class Main extends Application {
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
     private static boolean gameStarted, readyToShoot1 = false, readyToShoot2 = false, notTouching = true, collisionup = false;
-    private static int player1Score = 0, player2Score = 0;
+    private static int player1Score = 0, player2Score = 0, timebullet = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2;
+    private static Rectangle recentwall;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -164,12 +165,12 @@ public class Main extends Application {
                     createWall(10, 75, 160, 190, map1p);
                     createWall(90, 10, 10, 255, map1p);
                     createWall(90, 10, 10, 320, map1p);
-                    createWall(10, 75, 160, 0, map1p);
-                    createWall(10, 75, 160, 325, map1p);
+                    createWall(10, 70, 160, 0, map1p);
+                    createWall(10, 75, 160, 335, map1p);
                     createWall(10, 75, 250, 325, map1p);
-                    createWall(300, 10, 170, 65, map1p);
-                    createWall(10, 130, 340, 65, map1p);
-                    createWall(10, 75, 250, 125, map1p);
+                    createWall(250, 10, 220, 65, map1p);
+                    createWall(10, 130, 340, 70, map1p);
+                    createWall(10, 70, 250, 125, map1p);
                     createWall(230, 10, 250, 190, map1p);
                     createWall(10, 75, 480, 190, map1p);
                     createWall(125, 10, 475, 125, map1p);
@@ -212,15 +213,14 @@ public class Main extends Application {
                     createWall(10, 90, 80, 235, map2p);
                     createWall(10, 160, 160, 80, map2p);
                     createWall(10, 100, 160, 325, map2p);
-                    createWall(90, 10, 160, 315, map2p);
+                    createWall(80, 10, 160, 315, map2p);
                     createWall(10, 90, 240, 235, map2p);
                     createWall(160, 10, 240, 80, map2p);
                     createWall(80, 10, 240, 165, map2p);
-                    createWall(10, 160, 315, 85, map2p);
-                    createWall(85, 10, 315, 240, map2p);
+                    createWall(10, 165, 315, 85, map2p);
+                    createWall(85, 10, 325, 240, map2p);
                     createWall(10, 100, 315, 315, map2p);
                     createWall(10, 100, 390, 315, map2p);
-                    createWall(10, 100, 315, 315, map2p);
                     createWall(10, 90, 500, 0, map2p);
                     createWall(110, 10, 400, 165, map2p);
                     createWall(130, 10, 490, 240, map2p);
@@ -365,6 +365,7 @@ public class Main extends Application {
             }
             if (e.getCode() == KeyCode.W) {
                 w = false;
+                collisionup = false;
             }
             if (e.getCode() == KeyCode.S) {
                 s = false;
@@ -411,17 +412,20 @@ public class Main extends Application {
     Check if the wall is vertical (Width of 10), if it is, invert the X velocity of the bullet
     Check fi the wall is horizontal (width of 10), if it is, invert the Y velocity of the bullet
      */
+
     private static void bulletCol() {
         for (Element bullet : bullets) {
             for (Rectangle wall : walls) {
-                if (bullet.isHitting(wall)) {
-                    if (wall.getWidth() == 10) {
+                if (bullet.isHitting(wall) && recentwall != wall) {
+                    if (wall.getY() - bullet.getView().getTranslateY() < wall.getX() - bullet.getView().getTranslateX()) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
                     }
-                    if (wall.getHeight() == 10) {
+                    else {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
                     }
+                    recentwall = wall;
                 }
+
             }
         }
     }
@@ -647,20 +651,26 @@ public class Main extends Application {
                 }
             }
         }
+
         if (a) {
-            for (Rectangle wall : walls) {
-                if (player2.isHitting(wall))
+            for (Rectangle wall : walls) { //For every wall in the array list, check if the player is touching one and prevent turning if it is.
+                if (player2.isHitting(wall)) {
                     notTouching = false;
+                    player2.rotateRight();
+                }
             }
             if (notTouching) {
-                player2.rotateLeft();
+                player2.rotateLeft(); //Only turn if it's not touching the wall
             }
-
+            notTouching = true;
         }
+
         if (d) {
             for (Rectangle wall : walls) {
-                if (player2.isHitting(wall))
+                if (player2.isHitting(wall)) {
                     notTouching = false;
+                    player2.rotateLeft();
+                }
             }
             if (notTouching) {
                 player2.rotateRight();
