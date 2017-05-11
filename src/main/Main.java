@@ -50,7 +50,7 @@ public class Main extends Application {
     private static int player1Score = 0, player2Score = 0, timebullet = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2;
-    private static Rectangle recentwall;
+    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -177,6 +177,8 @@ public class Main extends Application {
                     createWall(140, 10, 250, 255, map1p);
                     createWall(10, 75, 390, 255, map1p);
                     createWall(210, 10, 390, 330, map1p);
+                    Rectangle dummyrectangle = new Rectangle(100000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
+                    map1p.getChildren().add(dummyrectangle);
 
                     labelplayer1score.setTranslateX(0);
                     labelplayer1score.setTranslateY(390);
@@ -225,6 +227,9 @@ public class Main extends Application {
                     createWall(110, 10, 400, 165, map2p);
                     createWall(130, 10, 490, 240, map2p);
                     createWall(10, 80, 490, 240, map2p);
+                    Rectangle dummyrectangle2 = new Rectangle(10000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
+                    map2p.getChildren().add(dummyrectangle2);
+
 
                     labelplayer1score.setTranslateX(0);
                     labelplayer1score.setTranslateY(390);
@@ -280,6 +285,8 @@ public class Main extends Application {
                     createWall(10, 125, 455, 0, map3p);
                     createWall(60, 10, 455, 125, map3p);
                     createWall(10, 110, 505, 125, map3p);
+                    Rectangle dummyrectangle3 = new Rectangle(100000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
+                    map3p.getChildren().add(dummyrectangle3);
 
                     labelplayer1score.setTranslateX(0);
                     labelplayer1score.setTranslateY(390);
@@ -419,8 +426,7 @@ public class Main extends Application {
                 if (bullet.isHitting(wall) && recentwall != wall) {
                     if (wall.getY() - bullet.getView().getTranslateY() < wall.getX() - bullet.getView().getTranslateX()) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
-                    }
-                    else {
+                    } else {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
                     }
                     recentwall = wall;
@@ -525,6 +531,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map1p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
+                            recentwall = dummyrectangle;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -547,6 +554,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map2p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
+                            recentwall = dummyrectangle2;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -569,6 +577,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map3p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
+                            recentwall = dummyrectangle3;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
