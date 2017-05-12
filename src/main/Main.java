@@ -692,7 +692,7 @@ public class Main extends Application {
                 Bullet bullet = new Bullet(); //Creates a new bullet
                 bullet.setVelocity(player1.getVelocity().normalize().multiply(3)); //Sets the velocity to 3x that of the player who shot it
                 addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map); //Adds the bullet
-                reload1 = 150;
+                reload1 = 300;
             }
         }
 
@@ -701,7 +701,7 @@ public class Main extends Application {
                 Bullet bullet = new Bullet();
                 bullet.setVelocity(player2.getVelocity().normalize().multiply(3));
                 addBullet(bullet, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
-                reload2 = 150;
+                reload2 = 300;
             }
         }
     }
