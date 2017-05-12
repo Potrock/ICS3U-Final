@@ -124,7 +124,6 @@ public class Main extends Application {
     /*
     Sets the game state for the match, also has all the prep for that arena (Making the walls, spawning the tanks, etc.)
     Right now, you can't set a gameState back to one that has already been created but if it's really an issue and we want more than just Best 2/3 matches we can make a workaround.
-
      */
     static void setGameState(gameState gameState) throws IOException {
         if (roundCount < totalRounds) {
@@ -423,13 +422,14 @@ public class Main extends Application {
     private static void bulletCol() {
         for (Element bullet : bullets) {
             for (Rectangle wall : walls) {
-                if (bullet.isHitting(wall) && recentwall != wall) {
+                if (bullet.isHitting(wall)){
+//                if (bullet.isHitting(wall) && recentwall != wall) {
                     if (wall.getY() - bullet.getView().getTranslateY() < wall.getX() - bullet.getView().getTranslateX()) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
                     } else {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
                     }
-                    recentwall = wall;
+//                    recentwall = wall;
                 }
 
             }
@@ -456,7 +456,6 @@ public class Main extends Application {
     /*
     Called when somebody dies
     Depending on the map being played it will go to a different task in the switch statement.
-
     Clears the walls array list to stop people from being blocked by non-existant walls
     Clears the bullet array list just because
      */
@@ -501,13 +500,11 @@ public class Main extends Application {
     Checks if the game is started to prevent NullPointerException errors
     Checks collision detection for each loop iteration
     Checks if a player is dead and resets the match if that happened
-
     All the cases in the switch statement do the same thing, just for different maps.
     Starts by checking key presses/releases
     If a bullet was shot 20 iterations ago, check kill detection. Otherwise your own bullet will kill you.
     Check bullet collision
     Updates the location of every bullet, and checks if they should be removed/killed
-
     Finally, increases the counter count of bullets.
      */
     private void onUpdate() {
@@ -531,7 +528,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map1p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-                            recentwall = dummyrectangle;
+//                            recentwall = dummyrectangle;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -554,7 +551,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map2p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-                            recentwall = dummyrectangle2;
+//                            recentwall = dummyrectangle2;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -577,7 +574,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map3p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-                            recentwall = dummyrectangle3;
+//                            recentwall = dummyrectangle3;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
