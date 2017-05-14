@@ -53,7 +53,7 @@ public class Main extends Application {
     private static int count = 0, currentMap = 0, roundCount = 0;
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
-    private static boolean gameStarted, readyToShoot1 = false, readyToShoot2 = false, notTouching = true, collisionup = false;
+    private static boolean gameStarted, readyToShoot1 = false, readyToShoot2 = false, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false;
     private static long player1Score = 0, player2Score = 0, timebullet = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2;
@@ -404,14 +404,14 @@ public class Main extends Application {
             }
             if (e.getCode() == KeyCode.UP) {
                 up = false;
-                collisionup = false;
+                collisionup1 = false;
             }
             if (e.getCode() == KeyCode.DOWN) {
                 down = false;
             }
             if (e.getCode() == KeyCode.W) {
                 w = false;
-                collisionup = false;
+                collisionup2 = false;
             }
             if (e.getCode() == KeyCode.S) {
                 s = false;
@@ -441,13 +441,23 @@ public class Main extends Application {
     For every wall in the array list of walls (all walls in the map), it checks if the player in question is touching that wall.
     If it's hitting a wall, it pushes them backwards.
      */
-    private static void colDetect(Tank player) {
-        for (Rectangle wall : walls) {
-            if (player.isHitting(wall) && collisionup) {
-                player.updateLocation(-1.75);
+    private static void colDetect(Tank player, int playerNumber) {
+        if (playerNumber == 1) {
+            for (Rectangle wall : walls) {
+                if (player.isHitting(wall) && collisionup1) {
+                    player.updateLocation(-1.75);
+                } else if (player.isHitting(wall) && !collisionup1) {
+                    player.updateLocation(1.75);
+                }
             }
-            else if (player.isHitting(wall) && !collisionup) {
-                player.updateLocation(1.75);
+        }
+        if (playerNumber == 2) {
+            for (Rectangle wall : walls) {
+                if (player.isHitting(wall) && collisionup2) {
+                    player.updateLocation(-1.75);
+                } else if (player.isHitting(wall) && !collisionup2) {
+                    player.updateLocation(1.75);
+                }
             }
         }
     }
@@ -637,34 +647,34 @@ public class Main extends Application {
         if (left) { //If left is true it runs the left turn logic
             for (Rectangle wall : walls) { //For every wall in the array list, check if the player is touching one and prevent turning if it is.
                 if (player1.isHitting(wall)) {
-                    notTouching = false;
+                    notTouching1 = false;
                     player1.rotateRight();
                 }
             }
-            if (notTouching) {
+            if (notTouching1) {
                 player1.rotateLeft(); //Only turn if it's not touching the wall
             }
-            notTouching = true;
+            notTouching1 = true;
         }
         if (right) {
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
-                    notTouching = false;
+                    notTouching1 = false;
                     player1.rotateLeft();
                 }
             }
-            if (notTouching) {
+            if (notTouching1) {
                 player1.rotateRight();
             }
-            notTouching = true;
+            notTouching1 = true;
         }
 
         if (up) {
             player1.updateLocation(1.75); //Updates the players location (Constant is for changing direction/speed)
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
-                    collisionup = true;
-                    colDetect(player1);
+                    collisionup1 = true;
+                    colDetect(player1, 1);
                 }
             }
         }
@@ -673,8 +683,8 @@ public class Main extends Application {
             player1.updateLocation(-1.75);
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
-                    collisionup = false;
-                    colDetect(player1);
+                    collisionup1 = false;
+                    colDetect(player1, 1);
                 }
             }
         }
@@ -683,8 +693,8 @@ public class Main extends Application {
             player2.updateLocation(1.75); //Below this repeats the logic above for the other player
         for (Rectangle wall : walls) {
             if (player2.isHitting(wall)) {
-                collisionup = true;
-                colDetect(player2);
+                collisionup2 = true;
+                colDetect(player2, 2);
             }
         }
 
@@ -692,8 +702,8 @@ public class Main extends Application {
             player2.updateLocation(-1.75);
             for (Rectangle wall : walls) {
                 if (player2.isHitting(wall)) {
-                    collisionup = false;
-                    colDetect(player2);
+                    collisionup2 = false;
+                    colDetect(player2, 2);
                 }
             }
         }
@@ -701,27 +711,27 @@ public class Main extends Application {
         if (a) {
             for (Rectangle wall : walls) { //For every wall in the array list, check if the player is touching one and prevent turning if it is.
                 if (player2.isHitting(wall)) {
-                    notTouching = false;
+                    notTouching2 = false;
                     player2.rotateRight();
                 }
             }
-            if (notTouching) {
+            if (notTouching2) {
                 player2.rotateLeft(); //Only turn if it's not touching the wall
             }
-            notTouching = true;
+            notTouching2 = true;
         }
 
         if (d) {
             for (Rectangle wall : walls) {
                 if (player2.isHitting(wall)) {
-                    notTouching = false;
+                    notTouching2 = false;
                     player2.rotateLeft();
                 }
             }
-            if (notTouching) {
+            if (notTouching2) {
                 player2.rotateRight();
             }
-            notTouching = true;
+            notTouching2 = true;
         }
 
         if (m && readyToShoot1 && reload1 == 0) { //Checks if M is true and the player is allowed to shoot again
