@@ -103,9 +103,13 @@ public class Main extends Application {
         Creates an animation that will run the handle method x times per second (60fps masterrace)
          */
         AnimationTimer timer = new AnimationTimer() {
+            private long lastUpdate = 0;
             @Override
             public void handle(long now) {
-                onUpdate();
+                if (now - lastUpdate >=8_000_000) {
+                    onUpdate();
+                    lastUpdate = now;
+                }
             }
         };
         timer.start();
