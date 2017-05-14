@@ -29,6 +29,15 @@ public class Controller {
     private Button exitButton;
 
     @FXML
+    private Button leaderButton;
+
+    @FXML
+    void displayLeader(ActionEvent event) throws IOException {
+        Main.setGameState(Main.gameState.LEADERBOARD);
+        System.out.println("nice");
+    }
+
+    @FXML
     void startOnAction(ActionEvent event) throws IOException {
         Main.setGameState(Main.gameState.ROUNDINPUT);
     }

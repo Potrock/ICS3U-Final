@@ -10,10 +10,17 @@ TO DO:
 package main;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -38,8 +45,8 @@ import java.util.ArrayList;
 public class Main extends Application {
     private static Stage primaryStage;
     private static AnchorPane map1p, map2p, map3p;
-    private static AnchorPane endingPagep, roundinputp;
-    private static Scene map1, map2, map3, mainmenu, roundinput, endingPage;
+    private static AnchorPane endingPagep, roundinputp, leaderboardp;
+    private static Scene map1, map2, map3, mainmenu, roundinput, endingPage, leaderboard;
     private static Tank player1, player2;
     private static ArrayList<Element> bullets = new ArrayList<>();
     private static ArrayList<Rectangle> walls = new ArrayList<>();
@@ -47,10 +54,12 @@ public class Main extends Application {
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
     private static boolean gameStarted, readyToShoot1 = false, readyToShoot2 = false, notTouching = true, collisionup = false;
-    private static int player1Score = 0, player2Score = 0, timebullet = 0;
+    private static long player1Score = 0, player2Score = 0, timebullet = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2;
     private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
+    private TableView<Score> table = new TableView<Score>();
+    private static final ObservableList<Score> data = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -64,9 +73,24 @@ public class Main extends Application {
         roundinputp = FXMLLoader.load(getClass().getResource("roundinput.fxml"));
         roundinput = new Scene(roundinputp, 600, 400);
 
+        leaderboardp = FXMLLoader.load(getClass().getResource("leaderboard.fxml"));
+        leaderboard = new Scene(leaderboardp, 600, 400);
+
         endingPagep = FXMLLoader.load(getClass().getResource("endingPage.fxml"));
         endingPage = new Scene(endingPagep, 600,400);
 
+        leaderboardp.getChildren().add(table);
+
+        TableColumn player1scores = new TableColumn("Player 1");
+        player1scores.setMinWidth(100);
+        player1scores.setCellValueFactory(new PropertyValueFactory<Score, SimpleLongProperty>("player1Score"));
+
+        TableColumn player2scores = new TableColumn("Player 2");
+        player2scores.setMinWidth(100);
+        player2scores.setCellValueFactory(new PropertyValueFactory<Score, SimpleLongProperty>("player2Score"));
+
+        table.getColumns().addAll(player1scores, player2scores);
+        table.setItems(data);
 
         map1p = FXMLLoader.load(getClass().getResource("map.fxml")); //Just setup for the matches
         map2p = FXMLLoader.load(getClass().getResource("map.fxml"));
@@ -102,19 +126,23 @@ public class Main extends Application {
     public static void submitScore() {
         try {
             FileReader reader = new FileReader("src/main/scores.json");
-            JSONArray data = new JSONArray();
+            JSONArray scoreData = new JSONArray();
             JSONParser parser = new JSONParser();
-            data = (JSONArray) parser.parse(reader);
+            scoreData = (JSONArray) parser.parse(reader);
             reader.close();
 
             FileWriter writer = new FileWriter("src/main/scores.json");
             JSONObject currentScore = new JSONObject();
             currentScore.put("Player 1", player1Score);
             currentScore.put("Player 2", player2Score);
-            data.add(currentScore);
-            writer.write(data.toJSONString());
-            writer.flush();
-            writer.close();
+            scoreData.add(currentScore);
+            writer.write(scoreData.toJSONString());
+
+            for(Object record : scoreData) {
+                long player1Score = (long) ((JSONObject)record).get("Player 1");
+                long player2Score = (long) ((JSONObject)record).get("Player 2");
+                data.add(new Score(player1Score,player2Score));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,7 +154,13 @@ public class Main extends Application {
     Right now, you can't set a gameState back to one that has already been created but if it's really an issue and we want more than just Best 2/3 matches we can make a workaround.
      */
     static void setGameState(gameState gameState) throws IOException {
-        if (roundCount < totalRounds) {
+        if (gameState.equals(Main.gameState.LEADERBOARD)) {
+            primaryStage.setScene(leaderboard);
+            map1p.getChildren().clear();
+            map2p.getChildren().clear();
+            map3p.getChildren().clear();
+            roundinputp.getChildren().clear();
+        } else if (roundCount < totalRounds) {
             switch (gameState) {
                 case MAIN:
                     map1p.getChildren().clear();
@@ -313,7 +347,9 @@ public class Main extends Application {
             map1p.getChildren().clear();
             map2p.getChildren().clear();
             map3p.getChildren().clear();
-            primaryStage.setScene(endingPage);
+            if (primaryStage.getScene() != leaderboard) {
+                primaryStage.setScene(endingPage);
+            }
         }
     }
 
@@ -735,7 +771,7 @@ public class Main extends Application {
         ROUNDINPUT,
         MAP1,
         MAP2,
-        MAP3
+        LEADERBOARD, MAP3
     }
 
     /*
@@ -757,6 +793,36 @@ public class Main extends Application {
     static class Bullet extends Element {
         Bullet() {
             super(new Circle(5, 5, 5, Color.BLACK));
+        }
+    }
+
+
+    public static class Score {
+        private final SimpleLongProperty player1score = new SimpleLongProperty(-1);
+        private final SimpleLongProperty player2score = new SimpleLongProperty(-1);
+
+        public Score() {
+            this(-1,-1);
+        }
+
+        public Score(long player1score, long player2score) {
+            this.setPlayer1Score(player1score);
+            this.setPlayer2Score(player2score);
+        }
+
+        public long getPlayer1Score() {
+            return player1score.get();
+        }
+        public long getPlayer2Score() {
+            return player2score.get();
+        }
+
+        private void setPlayer1Score(long n) {
+            player1score.set(n);
+        }
+
+        private void setPlayer2Score(long n) {
+            player2score.set(n);
         }
     }
 }
