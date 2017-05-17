@@ -48,16 +48,18 @@ public class Main extends Application {
     private static Scene map1, map2, map3, mainmenu, roundinput, endingPage, leaderboard;
     private static Tank player1, player2;
     private static ArrayList<Element> bullets = new ArrayList<>();
+    private static ArrayList<Element> bullets2 = new ArrayList<>();
     private static ArrayList<Rectangle> walls = new ArrayList<>();
     private static int count = 0, currentMap = 0, roundCount = 0;
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
-    private static boolean gameStarted, readyToShoot1 = false, readyToShoot2 = false, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false;
+    private static boolean gameStarted, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false;
     private static long player1Score = 0, player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2;
     private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
+    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -180,8 +182,6 @@ public class Main extends Application {
                     primaryStage.setScene(roundinput);
                     break;
                 case MAP1:
-                    readyToShoot1 = false;
-                    readyToShoot2 = false;
                     reload1 = 0;
                     reload2 = 0;
                     map1p.getChildren().clear();
@@ -201,14 +201,14 @@ public class Main extends Application {
                     createWall(90, 10, 10, 65, map1p);
                     createWall(90, 10, 10, 125, map1p);
                     createWall(150, 10, 10, 190, map1p);
-                    createWall(10, 75, 160, 190, map1p);
+                    createWall(10, 75, 160, 160, map1p);
                     createWall(90, 10, 10, 255, map1p);
                     createWall(90, 10, 10, 320, map1p);
                     createWall(10, 70, 160, 0, map1p);
                     createWall(10, 75, 160, 335, map1p);
                     createWall(10, 75, 250, 325, map1p);
                     createWall(250, 10, 220, 65, map1p);
-                    createWall(10, 130, 340, 70, map1p);
+                    createWall(10, 125, 340, 70, map1p);
                     createWall(10, 70, 250, 125, map1p);
                     createWall(230, 10, 250, 190, map1p);
                     createWall(10, 75, 480, 190, map1p);
@@ -237,8 +237,6 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
-                    readyToShoot1 = false;
-                    readyToShoot2 = false;
                     reload1 = 0;
                     reload2 = 0;
                     map1p.getChildren().clear();
@@ -294,8 +292,6 @@ public class Main extends Application {
                 /*
                 See explanation for Map 1
                  */
-                    readyToShoot1 = false;
-                    readyToShoot2 = false;
                     reload1 = 0;
                     reload2 = 0;
                     map1p.getChildren().clear();
@@ -402,7 +398,6 @@ public class Main extends Application {
             }
             if (e.getCode() == KeyCode.M) {
                 m = false;
-                readyToShoot1 = true;
             }
             if (e.getCode() == KeyCode.UP) {
                 up = false;
@@ -426,7 +421,6 @@ public class Main extends Application {
             }
             if (e.getCode() == KeyCode.Q) {
                 q = false;
-                readyToShoot2 = true;
             }
         });
 
@@ -453,6 +447,7 @@ public class Main extends Application {
                 }
             }
         }
+
         if (playerNumber == 2) {
             for (Rectangle wall : walls) {
                 if (player.isHitting(wall) && collisionup2) {
@@ -465,7 +460,7 @@ public class Main extends Application {
     }
 
     /*
-    Doesnt take input because bullets interact with everything and the bullet arraylist is global.
+    Doesn't take input because bullets interact with everything and the bullet arraylist is global.
     For every bullet that has been shot, check if it's hit each wall, and if it's hit a wall:
     Check if the wall is vertical (Width of 10), if it is, invert the X velocity of the bullet
     Check fi the wall is horizontal (width of 10), if it is, invert the Y velocity of the bullet
@@ -474,18 +469,30 @@ public class Main extends Application {
     private static void bulletCol() {
         for (Element bullet : bullets) {
             for (Rectangle wall : walls) {
-                if (bullet.isHitting(wall)){
-//                if (bullet.isHitting(wall) && recentwall != wall) {
-                    if (wall.getY() - bullet.getView().getTranslateY() < wall.getX() - bullet.getView().getTranslateX()) {
+                if (bullet.isHitting(wall)) {
+                    if (wall.getWidth() == 10 && recentwall != wall)
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
-                    } else {
+                    if (wall.getHeight() == 10 && recentwall != wall)
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
-                    }
-//                    recentwall = wall;
-                }
+                    recentwall = wall;
 
+                }
             }
         }
+
+        for (Element bullet2 : bullets2) {
+            for (Rectangle wall : walls) {
+                if (bullet2.isHitting(wall)) {
+                    if (wall.getWidth() == 10 && recentwall2 != wall)
+                        bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX() * -1, bullet2.getVelocity().getY()));
+                    if (wall.getHeight() == 10 && recentwall2 != wall)
+                        bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX(), bullet2.getVelocity().getY() * -1));
+                    recentwall2 = wall;
+
+                }
+            }
+        }
+
     }
 
     public static void main(String[] args) {
@@ -504,6 +511,12 @@ public class Main extends Application {
         count = 0;
     }
 
+    private void addBullet2(Element element, double x, double y, Pane map) {
+        bullets2.add(element);
+        addToGame(element, x, y, map);
+        count = 0;
+    }
+
 
     /*
     Called when somebody dies
@@ -517,6 +530,7 @@ public class Main extends Application {
                 try {
                     walls.clear();
                     bullets.clear();
+                    bullets2.clear();
                     setGameState(gameState.MAP2);
                     reload1 = 0;
                     reload2 = 0;
@@ -528,6 +542,7 @@ public class Main extends Application {
                 try {
                     walls.clear();
                     bullets.clear();
+                    bullets2.clear();
                     setGameState(gameState.MAP3);
                     reload1 = 0;
                     reload2 = 0;
@@ -539,6 +554,7 @@ public class Main extends Application {
                 try {
                     walls.clear();
                     bullets.clear();
+                    bullets2.clear();
                     setGameState(gameState.MAP1);
                     reload1 = 0;
                     reload2 = 0;
@@ -572,7 +588,7 @@ public class Main extends Application {
                 case 1:
                     keyCheck(map1p);
                     bulletCol();
-                    if (count > 20)
+                    if (count > 15)
                         killDetect(map1p);
                     for (Element bullet : bullets) {
                         bullet.counter++;
@@ -580,7 +596,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map1p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-//                            recentwall = dummyrectangle;
+                            recentwall = dummyrectangle;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -588,6 +604,22 @@ public class Main extends Application {
                             bullets.remove(i);
 
                     }
+
+                    for (Element bullet2 : bullets2) {
+                        bullet2.counter++;
+                        bullet2.updateLocation(1);
+                        if (bullet2.getCounter() > 300 || bullet2.dead()) {
+                            map3p.getChildren().remove(bullet2.getView());
+                            bullet2.setStatus(false);
+                            recentwall2 = dummyrectangle;
+                        }
+                    }
+                    for (int i = 0; i < bullets2.size() ; i++) {
+                        if (bullets2.get(i).dead())
+                            bullets2.remove(i);
+
+                    }
+
                     count++;
                     labelplayer1score.setText("Player 1: " + player1Score);
                     labelplayer2score.setText("Player 2: " + player2Score);
@@ -595,7 +627,7 @@ public class Main extends Application {
                 case 2:
                     keyCheck(map2p);
                     bulletCol();
-                    if (count > 20)
+                    if (count > 15)
                         killDetect(map2p);
                     for (Element bullet : bullets) {
                         bullet.counter++;
@@ -603,14 +635,29 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map2p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-//                            recentwall = dummyrectangle2;
+                            recentwall = dummyrectangle2;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
                         if (bullets.get(i).dead())
                             bullets.remove(i);
+                    }
+
+                    for (Element bullet2 : bullets2) {
+                        bullet2.counter++;
+                        bullet2.updateLocation(1);
+                        if (bullet2.getCounter() > 300 || bullet2.dead()) {
+                            map3p.getChildren().remove(bullet2.getView());
+                            bullet2.setStatus(false);
+                            recentwall2 = dummyrectangle2;
+                        }
+                    }
+                    for (int i = 0; i < bullets2.size() ; i++) {
+                        if (bullets2.get(i).dead())
+                            bullets2.remove(i);
 
                     }
+
                     count++;
                     labelplayer1score.setText("Player 1: " + player1Score);
                     labelplayer2score.setText("Player 2: " + player2Score);
@@ -618,7 +665,7 @@ public class Main extends Application {
                 case 3:
                     keyCheck(map3p);
                     bulletCol();
-                    if (count > 20)
+                    if (count > 15)
                         killDetect(map3p);
                     for (Element bullet : bullets) {
                         bullet.counter++;
@@ -626,7 +673,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map3p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-//                            recentwall = dummyrectangle3;
+                            recentwall = dummyrectangle3;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -634,6 +681,22 @@ public class Main extends Application {
                             bullets.remove(i);
 
                     }
+
+                    for (Element bullet2 : bullets2) {
+                        bullet2.counter++;
+                        bullet2.updateLocation(1);
+                        if (bullet2.getCounter() > 300 || bullet2.dead()) {
+                            map3p.getChildren().remove(bullet2.getView());
+                            bullet2.setStatus(false);
+                            recentwall = dummyrectangle3;
+                        }
+                    }
+                    for (int i = 0; i < bullets2.size() ; i++) {
+                        if (bullets2.get(i).dead())
+                            bullets2.remove(i);
+
+                    }
+
                     count++;
                     labelplayer1score.setText("Player 1: " + player1Score);
                     labelplayer2score.setText("Player 2: " + player2Score);
@@ -670,6 +733,7 @@ public class Main extends Application {
             }
             notTouching1 = true;
         }
+
 
         if (up) {
             player1.updateLocation(1.75); //Updates the players location (Constant is for changing direction/speed)
@@ -736,7 +800,7 @@ public class Main extends Application {
             notTouching2 = true;
         }
 
-        if (m && readyToShoot1 && reload1 == 0) { //Checks if M is true and the player is allowed to shoot again
+        if (m && reload1 == 0) { //Checks if M is true and the player is allowed to shoot again
             if (player1.alive()) { //Checks if the player is actually alive
                 Bullet bullet = new Bullet(); //Creates a new bullet
                 bullet.setVelocity(player1.getVelocity().normalize().multiply(3)); //Sets the velocity to 3x that of the player who shot it
@@ -745,11 +809,11 @@ public class Main extends Application {
             }
         }
 
-        if (q && readyToShoot2 && reload2 == 0) {
+        if (q && reload2 == 0) {
             if (player2.alive()) {
-                Bullet bullet = new Bullet();
-                bullet.setVelocity(player2.getVelocity().normalize().multiply(3));
-                addBullet(bullet, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
+                Bullet2 bullet2 = new Bullet2();
+                bullet2.setVelocity(player2.getVelocity().normalize().multiply(3));
+                addBullet2(bullet2, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
                 reload2 = 300;
             }
         }
@@ -773,6 +837,23 @@ public class Main extends Application {
                 player2.setStatus(false);
                 map.getChildren().remove(player2.getView());
                 map.getChildren().remove(bullet.getView());
+                System.out.println("player 2 dead");
+                player1Score++;
+            }
+        }
+
+        for (Element bullet2 : bullets2) {
+            if (bullet2.isHitting(player1.getView())) {
+                player1.setStatus(false);
+                map.getChildren().remove(player1.getView());
+                System.out.println("player 1 dead");
+                map.getChildren().remove(bullet2.getView());
+                player2Score++;
+            }
+            if (bullet2.isHitting(player2.getView())) {
+                player2.setStatus(false);
+                map.getChildren().remove(player2.getView());
+                map.getChildren().remove(bullet2.getView());
                 System.out.println("player 2 dead");
                 player1Score++;
             }
@@ -808,6 +889,12 @@ public class Main extends Application {
      */
     static class Bullet extends Element {
         Bullet() {
+            super(new Circle(5, 5, 5, Color.BLACK));
+        }
+    }
+
+    static class Bullet2 extends Element {
+        Bullet2() {
             super(new Circle(5, 5, 5, Color.BLACK));
         }
     }
