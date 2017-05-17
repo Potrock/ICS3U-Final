@@ -16,7 +16,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -34,7 +33,6 @@ import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -45,7 +43,8 @@ import java.util.ArrayList;
 public class Main extends Application {
     private static Stage primaryStage;
     private static AnchorPane map1p, map2p, map3p;
-    private static AnchorPane endingPagep, roundinputp, leaderboardp;
+    private static AnchorPane endingPagep;
+    private static AnchorPane roundinputp;
     private static Scene map1, map2, map3, mainmenu, roundinput, endingPage, leaderboard;
     private static Tank player1, player2;
     private static ArrayList<Element> bullets = new ArrayList<>();
@@ -54,11 +53,10 @@ public class Main extends Application {
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
     private static boolean gameStarted, readyToShoot1 = false, readyToShoot2 = false, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false;
-    private static long player1Score = 0, player2Score = 0, timebullet = 0;
+    private static long player1Score = 0, player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2;
-    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
-    private TableView<Score> table = new TableView<Score>();
+    private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
 
     @Override
@@ -73,7 +71,7 @@ public class Main extends Application {
         roundinputp = FXMLLoader.load(getClass().getResource("roundinput.fxml"));
         roundinput = new Scene(roundinputp, 600, 400);
 
-        leaderboardp = FXMLLoader.load(getClass().getResource("leaderboard.fxml"));
+        AnchorPane leaderboardp = FXMLLoader.load(getClass().getResource("leaderboard.fxml"));
         leaderboard = new Scene(leaderboardp, 600, 400);
 
         endingPagep = FXMLLoader.load(getClass().getResource("endingPage.fxml"));
@@ -130,7 +128,7 @@ public class Main extends Application {
     public static void submitScore() {
         try {
             FileReader reader = new FileReader("src/main/scores.json");
-            JSONArray scoreData = new JSONArray();
+            JSONArray scoreData;
             JSONParser parser = new JSONParser();
             scoreData = (JSONArray) parser.parse(reader);
             reader.close();
@@ -141,6 +139,10 @@ public class Main extends Application {
             currentScore.put("Player 2", player2Score);
             scoreData.add(currentScore);
             writer.write(scoreData.toJSONString());
+            writer.flush();
+            writer.close();
+
+            System.out.println(scoreData.toJSONString());
 
             for(Object record : scoreData) {
                 long player1Score = (long) ((JSONObject)record).get("Player 1");
@@ -819,16 +821,9 @@ public class Main extends Application {
             this(-1,-1);
         }
 
-        public Score(long player1score, long player2score) {
+        Score(long player1score, long player2score) {
             this.setPlayer1Score(player1score);
             this.setPlayer2Score(player2score);
-        }
-
-        public long getPlayer1Score() {
-            return player1score.get();
-        }
-        public long getPlayer2Score() {
-            return player2score.get();
         }
 
         private void setPlayer1Score(long n) {
