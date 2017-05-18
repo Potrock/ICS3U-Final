@@ -38,6 +38,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Main extends Application {
@@ -50,7 +51,7 @@ public class Main extends Application {
     private static ArrayList<Element> bullets = new ArrayList<>();
     private static ArrayList<Element> bullets2 = new ArrayList<>();
     private static ArrayList<Rectangle> walls = new ArrayList<>();
-    private static int count = 0, currentMap = 0, roundCount = 0;
+    private static int count = 0, currentMap = 0, roundCount = 0, delay1 = 0, delay2 = 0;
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
     private static boolean gameStarted, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false;
@@ -60,6 +61,7 @@ public class Main extends Application {
     private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
     private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
+    private static int recentIntWall1, recentIntWall2;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -194,6 +196,7 @@ public class Main extends Application {
                     addToGame(player1, 30, 285, map1p);
                     addToGame(player2, 525, 255, map1p);
                     gameStarted = true; //Sets game to have started
+                    Random r = new Random();
                     createWall(10, 400, 0, 0, map1p); //These createWall methods all create the layout of the map.
                     createWall(10, 400, 590, 0, map1p);
                     createWall(600, 10, 0, 0, map1p);
@@ -209,13 +212,11 @@ public class Main extends Application {
                     createWall(10, 75, 250, 325, map1p);
                     createWall(250, 10, 220, 65, map1p);
                     createWall(10, 125, 340, 70, map1p);
-                    createWall(10, 70, 250, 125, map1p);
-                    createWall(230, 10, 250, 190, map1p);
-                    createWall(10, 75, 480, 190, map1p);
-                    createWall(125, 10, 475, 125, map1p);
-                    createWall(140, 10, 250, 255, map1p);
+                    createWall(10, 125, 250, 125, map1p);
+                    createWall(230, 10, 255, 190, map1p);
+                    createWall(10, 125, 480, 150, map1p);
                     createWall(10, 75, 390, 255, map1p);
-                    createWall(210, 10, 390, 330, map1p);
+                    createWall(300, 10, 335, 330, map1p);
                     Rectangle dummyrectangle = new Rectangle(100000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
                     map1p.getChildren().add(dummyrectangle);
 
@@ -249,21 +250,18 @@ public class Main extends Application {
                     createWall(600, 10, 0, 390, map2p);
                     createWall(90, 10, 0, 165, map2p);
                     createWall(10, 90, 80, 0, map2p);
-                    createWall(10, 90, 80, 235, map2p);
                     createWall(10, 160, 160, 80, map2p);
                     createWall(10, 100, 160, 325, map2p);
-                    createWall(80, 10, 160, 315, map2p);
-                    createWall(10, 90, 240, 235, map2p);
+                    createWall(150, 10, 90, 315, map2p);
                     createWall(160, 10, 240, 80, map2p);
                     createWall(80, 10, 240, 165, map2p);
-                    createWall(10, 165, 315, 85, map2p);
+                    createWall(10, 250, 315, 85, map2p);
                     createWall(85, 10, 325, 240, map2p);
-                    createWall(10, 100, 315, 315, map2p);
                     createWall(10, 100, 390, 315, map2p);
                     createWall(10, 90, 500, 0, map2p);
                     createWall(110, 10, 400, 165, map2p);
-                    createWall(130, 10, 490, 240, map2p);
-                    createWall(10, 80, 490, 240, map2p);
+                    createWall(130, 10, 495, 270, map2p);
+                    createWall(10, 100, 490, 230, map2p);
                     Rectangle dummyrectangle2 = new Rectangle(10000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
                     map2p.getChildren().add(dummyrectangle2);
 
@@ -319,7 +317,7 @@ public class Main extends Application {
                     createWall(10, 90, 415, 225, map3p);
                     createWall(10, 125, 455, 0, map3p);
                     createWall(60, 10, 455, 125, map3p);
-                    createWall(10, 110, 505, 125, map3p);
+                    createWall(10, 110, 505, 135, map3p);
                     Rectangle dummyrectangle3 = new Rectangle(100000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
                     map3p.getChildren().add(dummyrectangle3);
 
@@ -426,10 +424,33 @@ public class Main extends Application {
 
     }
 
-    private static void createWall(int width, int height, int x, int y, Pane map) { //Takes input for the width,e height, coordinates and which Parent the wall should be in
-        Rectangle rect = new Rectangle(x, y, width, height); //Creates the rectangle with a meaningless name.
-        walls.add(rect); //Adds the rectangle to the arraylist of rectangles
-        map.getChildren().add(rect); //Adds it to the parent that is being used.
+
+    private static void createWall (int width, int height, int x, int y, Pane map) {
+        Rectangle left, top, right, bottom;
+        Random r = new Random();
+        if (width > height) {
+             left = new Rectangle(x, y, 1, height);
+             top = new Rectangle(x + 1, y, width - 1, height / 2);
+             right = new Rectangle(x + width, y, 1, height);
+             bottom = new Rectangle(x + 1, y + height / 2, width - 1, height / 2);
+
+        } else {
+            left = new Rectangle(x, y+1, width/2, height-3);
+            top = new Rectangle(x, y, width,1);
+            right = new Rectangle(x+width/2, y+1, width/2, height-3);
+            bottom = new Rectangle(x, y+height-2, width, 2);
+        }
+        Color c = Color.rgb(r.nextInt(256),r.nextInt(256), r.nextInt(256),0.25);
+        left.setFill(c);
+        top.setFill(c);
+        right.setFill(c);
+        bottom.setFill(c);
+        walls.add(top);
+        walls.add(right);
+        walls.add(bottom);
+        walls.add(left);
+        map.getChildren().addAll(top, right, bottom, left);
+
     }
 
     /*
@@ -437,25 +458,25 @@ public class Main extends Application {
     For every wall in the array list of walls (all walls in the map), it checks if the player in question is touching that wall.
     If it's hitting a wall, it pushes them backwards.
      */
-    private static void colDetect(Tank player, int playerNumber) {
+    private static void colDetect(Tank player, int playerNumber, Rectangle wall) {
         if (playerNumber == 1) {
-            for (Rectangle wall : walls) {
+            //for (Rectangle wall : walls) {
                 if (player.isHitting(wall) && collisionup1) {
                     player.updateLocation(-1.75);
                 } else if (player.isHitting(wall) && !collisionup1) {
                     player.updateLocation(1.75);
                 }
-            }
+            //}
         }
 
         if (playerNumber == 2) {
-            for (Rectangle wall : walls) {
+            //for (Rectangle wall : walls) {
                 if (player.isHitting(wall) && collisionup2) {
                     player.updateLocation(-1.75);
                 } else if (player.isHitting(wall) && !collisionup2) {
                     player.updateLocation(1.75);
                 }
-            }
+            //}
         }
     }
 
@@ -467,32 +488,50 @@ public class Main extends Application {
      */
 
     private static void bulletCol() {
+        recentIntWall1 = walls.size() + 1;
+        recentIntWall2 = walls.size() + 1;
+
+        int nonhittableX, nonhittableY;
         for (Element bullet : bullets) {
-            for (Rectangle wall : walls) {
+
+                nonhittableX = bullet.getVelocity().getX() > 0 ? 1:3;
+                nonhittableY = bullet.getVelocity().getY() > 0 ? 2:0;
+
+            for (int i = 0; i < walls.size(); i++) {
+                Rectangle wall = walls.get(i);
                 if (bullet.isHitting(wall)) {
-                    if (wall.getWidth() == 10 && recentwall != wall)
+                    if (wall.getWidth() < wall.getHeight() && recentIntWall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
-                    if (wall.getHeight() == 10 && recentwall != wall)
+                        System.out.println("vertical");
+//                        recentwall = wall;
+                        recentIntWall1 = i/4;
+                    }
+                    else if (wall.getWidth() > wall.getHeight() && recentIntWall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
+                        System.out.println("horizontal");
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
-                    recentwall = wall;
-
+//                        recentwall = wall;
+                        recentIntWall1 = i/4;
+                    }
                 }
             }
         }
-
         for (Element bullet2 : bullets2) {
-            for (Rectangle wall : walls) {
+            for (int i = 0; i < walls.size(); i++) {
+                Rectangle wall = walls.get(i);
                 if (bullet2.isHitting(wall)) {
-                    if (wall.getWidth() == 10 && recentwall2 != wall)
+                    if (wall.getWidth() < wall.getHeight() && recentIntWall2 != i/4 && delay2 == 0) {
                         bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX() * -1, bullet2.getVelocity().getY()));
-                    if (wall.getHeight() == 10 && recentwall2 != wall)
+                        recentIntWall2 = i/4;
+                        System.out.println("vertical2");
+                    }
+                    else if (wall.getWidth() > wall.getHeight() && recentIntWall2 != i/4 && delay2 == 0) {
                         bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX(), bullet2.getVelocity().getY() * -1));
-                    recentwall2 = wall;
-
+                        recentIntWall2 = i/4;
+                        System.out.println("horizontal2");
+                    }
                 }
             }
         }
-
     }
 
     public static void main(String[] args) {
@@ -588,6 +627,10 @@ public class Main extends Application {
                 case 1:
                     keyCheck(map1p);
                     bulletCol();
+                    if (delay1 > 0)
+                    delay1--;
+                    if (delay2 > 0)
+                        delay2--;
                     if (count > 15)
                         killDetect(map1p);
                     for (Element bullet : bullets) {
@@ -609,7 +652,7 @@ public class Main extends Application {
                         bullet2.counter++;
                         bullet2.updateLocation(1);
                         if (bullet2.getCounter() > 300 || bullet2.dead()) {
-                            map3p.getChildren().remove(bullet2.getView());
+                            map1p.getChildren().remove(bullet2.getView());
                             bullet2.setStatus(false);
                             recentwall2 = dummyrectangle;
                         }
@@ -617,7 +660,6 @@ public class Main extends Application {
                     for (int i = 0; i < bullets2.size() ; i++) {
                         if (bullets2.get(i).dead())
                             bullets2.remove(i);
-
                     }
 
                     count++;
@@ -627,6 +669,10 @@ public class Main extends Application {
                 case 2:
                     keyCheck(map2p);
                     bulletCol();
+                    if (delay1 > 0)
+                        delay1--;
+                    if (delay2 > 0)
+                        delay2--;
                     if (count > 15)
                         killDetect(map2p);
                     for (Element bullet : bullets) {
@@ -647,7 +693,7 @@ public class Main extends Application {
                         bullet2.counter++;
                         bullet2.updateLocation(1);
                         if (bullet2.getCounter() > 300 || bullet2.dead()) {
-                            map3p.getChildren().remove(bullet2.getView());
+                            map2p.getChildren().remove(bullet2.getView());
                             bullet2.setStatus(false);
                             recentwall2 = dummyrectangle2;
                         }
@@ -665,6 +711,10 @@ public class Main extends Application {
                 case 3:
                     keyCheck(map3p);
                     bulletCol();
+                    if (delay1 > 0)
+                        delay1--;
+                    if (delay2 > 0)
+                        delay2--;
                     if (count > 15)
                         killDetect(map3p);
                     for (Element bullet : bullets) {
@@ -740,7 +790,7 @@ public class Main extends Application {
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
                     collisionup1 = true;
-                    colDetect(player1, 1);
+                    colDetect(player1, 1, wall);
                 }
             }
         }
@@ -750,17 +800,18 @@ public class Main extends Application {
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
                     collisionup1 = false;
-                    colDetect(player1, 1);
+                    colDetect(player1, 1, wall);
                 }
             }
         }
 
-        if (w)
+        if (w) {
             player2.updateLocation(1.75); //Below this repeats the logic above for the other player
-        for (Rectangle wall : walls) {
-            if (player2.isHitting(wall)) {
-                collisionup2 = true;
-                colDetect(player2, 2);
+            for (Rectangle wall : walls) {
+                if (player2.isHitting(wall)) {
+                    collisionup2 = true;
+                    colDetect(player2, 2, wall);
+                }
             }
         }
 
@@ -769,7 +820,7 @@ public class Main extends Application {
             for (Rectangle wall : walls) {
                 if (player2.isHitting(wall)) {
                     collisionup2 = false;
-                    colDetect(player2, 2);
+                    colDetect(player2, 2, wall);
                 }
             }
         }
