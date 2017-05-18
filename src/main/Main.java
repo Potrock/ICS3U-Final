@@ -60,7 +60,7 @@ public class Main extends Application {
     private static int reload1, reload2;
     private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
-    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
+    private static Rectangle recentwall, recentwall2, player1shell, player2shell, dummyrectangle, dummyrectangle2, dummyrectangle3;
     private static int recentIntWall1, recentIntWall2;
 
     @Override
@@ -76,7 +76,7 @@ public class Main extends Application {
         roundinput = new Scene(roundinputp, 600, 400);
 
         AnchorPane leaderboardp = FXMLLoader.load(getClass().getResource("leaderboard.fxml"));
-        leaderboard = new Scene(leaderboardp, 600, 400);
+        leaderboard = new Scene(leaderboardp, 200, 400);
 
         endingPagep = FXMLLoader.load(getClass().getResource("endingPage.fxml"));
         endingPage = new Scene(endingPagep, 600,400);
@@ -85,11 +85,11 @@ public class Main extends Application {
 
         TableColumn player1scores = new TableColumn("Player 1");
         player1scores.setMinWidth(100);
-        player1scores.setCellValueFactory(new PropertyValueFactory<Score, SimpleLongProperty>("player1Score"));
+        player1scores.setCellValueFactory(new PropertyValueFactory<Score, SimpleLongProperty>("player1score"));
 
         TableColumn player2scores = new TableColumn("Player 2");
         player2scores.setMinWidth(100);
-        player2scores.setCellValueFactory(new PropertyValueFactory<Score, SimpleLongProperty>("player2Score"));
+        player2scores.setCellValueFactory(new PropertyValueFactory<Score, SimpleLongProperty>("player2score"));
 
         table.getColumns().addAll(player1scores, player2scores);
         table.setItems(data);
@@ -139,8 +139,8 @@ public class Main extends Application {
 
             FileWriter writer = new FileWriter("src/main/scores.json");
             JSONObject currentScore = new JSONObject();
-            currentScore.put("Player 1", player1Score);
-            currentScore.put("Player 2", player2Score);
+            currentScore.put("Player1", player1Score);
+            currentScore.put("Player2", player2Score);
             scoreData.add(currentScore);
             writer.write(scoreData.toJSONString());
             writer.flush();
@@ -149,8 +149,8 @@ public class Main extends Application {
             System.out.println(scoreData.toJSONString());
 
             for(Object record : scoreData) {
-                long player1Score = (long) ((JSONObject)record).get("Player 1");
-                long player2Score = (long) ((JSONObject)record).get("Player 2");
+                long player1Score = (long) ((JSONObject)record).get("Player1");
+                long player2Score = (long) ((JSONObject)record).get("Player2");
                 data.add(new Score(player1Score,player2Score));
             }
         } catch (Exception e) {
@@ -429,10 +429,10 @@ public class Main extends Application {
         Rectangle left, top, right, bottom;
         Random r = new Random();
         if (width > height) {
-             left = new Rectangle(x, y, 1, height);
-             top = new Rectangle(x + 1, y, width - 1, height / 2);
-             right = new Rectangle(x + width, y, 1, height);
-             bottom = new Rectangle(x + 1, y + height / 2, width - 1, height / 2);
+            left = new Rectangle(x, y, 1, height);
+            top = new Rectangle(x + 1, y, width - 1, height / 2);
+            right = new Rectangle(x + width, y, 1, height);
+            bottom = new Rectangle(x + 1, y + height / 2, width - 1, height / 2);
 
         } else {
             left = new Rectangle(x, y+1, width/2, height-3);
@@ -461,21 +461,21 @@ public class Main extends Application {
     private static void colDetect(Tank player, int playerNumber, Rectangle wall) {
         if (playerNumber == 1) {
             //for (Rectangle wall : walls) {
-                if (player.isHitting(wall) && collisionup1) {
-                    player.updateLocation(-1.75);
-                } else if (player.isHitting(wall) && !collisionup1) {
-                    player.updateLocation(1.75);
-                }
+            if (player.isHitting(wall) && collisionup1) {
+                player.updateLocation(-1.75);
+            } else if (player.isHitting(wall) && !collisionup1) {
+                player.updateLocation(1.75);
+            }
             //}
         }
 
         if (playerNumber == 2) {
             //for (Rectangle wall : walls) {
-                if (player.isHitting(wall) && collisionup2) {
-                    player.updateLocation(-1.75);
-                } else if (player.isHitting(wall) && !collisionup2) {
-                    player.updateLocation(1.75);
-                }
+            if (player.isHitting(wall) && collisionup2) {
+                player.updateLocation(-1.75);
+            } else if (player.isHitting(wall) && !collisionup2) {
+                player.updateLocation(1.75);
+            }
             //}
         }
     }
@@ -494,8 +494,8 @@ public class Main extends Application {
         int nonhittableX, nonhittableY;
         for (Element bullet : bullets) {
 
-                nonhittableX = bullet.getVelocity().getX() > 0 ? 1:3;
-                nonhittableY = bullet.getVelocity().getY() > 0 ? 2:0;
+            nonhittableX = bullet.getVelocity().getX() > 0 ? 1:3;
+            nonhittableY = bullet.getVelocity().getY() > 0 ? 2:0;
 
             for (int i = 0; i < walls.size(); i++) {
                 Rectangle wall = walls.get(i);
@@ -628,7 +628,7 @@ public class Main extends Application {
                     keyCheck(map1p);
                     bulletCol();
                     if (delay1 > 0)
-                    delay1--;
+                        delay1--;
                     if (delay2 > 0)
                         delay2--;
                     if (count > 15)
@@ -960,15 +960,23 @@ public class Main extends Application {
         }
 
         Score(long player1score, long player2score) {
-            this.setPlayer1Score(player1score);
-            this.setPlayer2Score(player2score);
+            this.setPlayer1score(player1score);
+            this.setPlayer2score(player2score);
         }
 
-        private void setPlayer1Score(long n) {
+        public long getPlayer1score() {
+            return player1score.get();
+        }
+
+        public long getPlayer2score() {
+            return player2score.get();
+        }
+
+        public void setPlayer1score(long n) {
             player1score.set(n);
         }
 
-        private void setPlayer2Score(long n) {
+        public void setPlayer2score(long n) {
             player2score.set(n);
         }
     }
