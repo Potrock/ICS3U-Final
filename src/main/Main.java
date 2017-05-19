@@ -20,12 +20,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -60,8 +58,8 @@ public class Main extends Application {
     private static int reload1, reload2, autoshootdelay1, autoshootdelay2;
     private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
-    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
-    private static int recentIntWall1, recentIntWall2;
+    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3, recentinnerwall, recentinnerwall2;
+    private static int Wall1, Wall2;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -142,6 +140,7 @@ public class Main extends Application {
             currentScore.put("Player1", player1Score);
             currentScore.put("Player2", player2Score);
             scoreData.add(currentScore);
+            scoreData.add(currentScore);
             writer.write(scoreData.toJSONString());
             writer.flush();
             writer.close();
@@ -198,7 +197,6 @@ public class Main extends Application {
                     addToGame(player1, 30, 285, map1p);
                     addToGame(player2, 525, 255, map1p);
                     gameStarted = true; //Sets game to have started
-                    Random r = new Random();
                     createWall(10, 400, 0, 0, map1p); //These createWall methods all create the layout of the map.
                     createWall(10, 400, 590, 0, map1p);
                     createWall(600, 10, 0, 0, map1p);
@@ -429,7 +427,6 @@ public class Main extends Application {
 
     private static void createWall (int width, int height, int x, int y, Pane map) {
         Rectangle left, top, right, bottom;
-        Random r = new Random();
         if (width > height) {
             left = new Rectangle(x, y, 1, height);
             top = new Rectangle(x + 1, y, width - 1, height / 2);
@@ -458,23 +455,19 @@ public class Main extends Application {
      */
     private static void colDetect(Tank player, int playerNumber, Rectangle wall) {
         if (playerNumber == 1) {
-            //for (Rectangle wall : walls) {
             if (player.isHitting(wall) && collisionup1) {
                 player.updateLocation(-1.75);
             } else if (player.isHitting(wall) && !collisionup1) {
                 player.updateLocation(1.75);
             }
-            //}
         }
 
         if (playerNumber == 2) {
-            //for (Rectangle wall : walls) {
             if (player.isHitting(wall) && collisionup2) {
                 player.updateLocation(-1.75);
             } else if (player.isHitting(wall) && !collisionup2) {
                 player.updateLocation(1.75);
             }
-            //}
         }
     }
 
@@ -486,8 +479,8 @@ public class Main extends Application {
      */
 
     private static void bulletCol() {
-        recentIntWall1 = walls.size() + 1;
-        recentIntWall2 = walls.size() + 1;
+        Wall1 = walls.size() + 1;
+        Wall2 = walls.size() + 1;
 
         int nonhittableX, nonhittableY;
         for (Element bullet : bullets) {
@@ -498,13 +491,15 @@ public class Main extends Application {
             for (int i = 0; i < walls.size(); i++) {
                 Rectangle wall = walls.get(i);
                 if (bullet.isHitting(wall)) {
-                    if (wall.getWidth() < wall.getHeight() && recentIntWall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
+                    if (wall.getWidth() < wall.getHeight() && Wall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4 && recentinnerwall != wall) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
-                        recentIntWall1 = i/4;
+                        Wall1 = i/4;
+                        recentinnerwall = wall;
                     }
-                    else if (wall.getWidth() > wall.getHeight() && recentIntWall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
+                    else if (wall.getWidth() > wall.getHeight() && Wall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4 && recentinnerwall != wall) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
-                        recentIntWall1 = i/4;
+                        Wall1 = i/4;
+                        recentinnerwall = wall;
                     }
                     bullethitwall1 = true;
                 }
@@ -518,13 +513,13 @@ public class Main extends Application {
             for (int i = 0; i < walls.size(); i++) {
                 Rectangle wall = walls.get(i);
                 if (bullet2.isHitting(wall)) {
-                    if (wall.getWidth() < wall.getHeight() && recentIntWall2 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
+                    if (wall.getWidth() < wall.getHeight() && Wall2 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
                         bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX() * -1, bullet2.getVelocity().getY()));
-                        recentIntWall2 = i/4;
+                        Wall2 = i/4;
                     }
-                    else if (wall.getWidth() > wall.getHeight() && recentIntWall2 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
+                    else if (wall.getWidth() > wall.getHeight() && Wall2 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
                         bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX(), bullet2.getVelocity().getY() * -1));
-                        recentIntWall2 = i/4;
+                        Wall2 = i/4;
                     }
                     bullethitwall2 = true;
                 }

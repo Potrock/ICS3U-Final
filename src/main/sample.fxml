@@ -21,7 +21,11 @@
                   <Button fx:id="startbtn" mnemonicParsing="false" onAction="#startOnAction" text="START">
                      <padding>
                         <Insets bottom="15.0" left="80.0" right="80.0" top="15.0" />
-                     </padding></Button>
+                     </padding> <font>
+                     <Font size="14.0" />
+                  </font>
+                  </Button>
+
                   <Button fx:id="exitbtn" mnemonicParsing="false" onAction="#exitOnAction" text="EXIT">
                      <padding>
                         <Insets bottom="15.0" left="80.0" right="80.0" top="15.0" />
