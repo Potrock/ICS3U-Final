@@ -57,10 +57,10 @@ public class Main extends Application {
     private static boolean gameStarted, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false, bullethitwall1, bullethitwall2;
     private static long player1Score = 0, player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
-    private static int reload1, reload2;
+    private static int reload1, reload2, autoshootdelay1, autoshootdelay2;
     private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
-    private static Rectangle recentwall, recentwall2, player1shell, player2shell, dummyrectangle, dummyrectangle2, dummyrectangle3;
+    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
     private static int recentIntWall1, recentIntWall2;
 
     @Override
@@ -186,6 +186,8 @@ public class Main extends Application {
                 case MAP1:
                     reload1 = 0;
                     reload2 = 0;
+                    autoshootdelay1 = 2;
+                    autoshootdelay2 = 2;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -240,6 +242,8 @@ public class Main extends Application {
                  */
                     reload1 = 0;
                     reload2 = 0;
+                    autoshootdelay1 = 2;
+                    autoshootdelay2 = 2;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -292,6 +296,8 @@ public class Main extends Application {
                  */
                     reload1 = 0;
                     reload2 = 0;
+                    autoshootdelay1 = 2;
+                    autoshootdelay2 = 2;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -615,6 +621,11 @@ public class Main extends Application {
             if (player1.dead() || player2.dead())
                 resetMatch();
 
+            if (autoshootdelay1 > 0)
+                autoshootdelay1--;
+            if (autoshootdelay2 > 0)
+                autoshootdelay2--;
+
             switch (currentMap) {
                 case 1:
                     keyCheck(map1p);
@@ -827,7 +838,7 @@ public class Main extends Application {
             notTouching2 = true;
         }
 
-        if (m && reload1 == 0) { //Checks if M is true and the player is allowed to shoot again
+        if (m && reload1 == 0 && autoshootdelay1 == 0) { //Checks if M is true and the player is allowed to shoot again
             if (player1.alive()) { //Checks if the player is actually alive
                 Bullet bullet = new Bullet(); //Creates a new bullet
                 bullet.setVelocity(player1.getVelocity().normalize().multiply(3)); //Sets the velocity to 3x that of the player who shot it
@@ -836,7 +847,7 @@ public class Main extends Application {
             }
         }
 
-        if (q && reload2 == 0) {
+        if (q && reload2 == 0 && autoshootdelay2 == 0) {
             if (player2.alive()) {
                 Bullet2 bullet2 = new Bullet2();
                 bullet2.setVelocity(player2.getVelocity().normalize().multiply(3));
