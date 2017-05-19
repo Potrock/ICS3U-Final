@@ -1,10 +1,8 @@
 /*
 TO DO:
 - Collision against other tanks
-- Settings page for tweaking sensitivity??
 - Turning corners
-- High score
-- Fix main menu (Start button isn't chopped off + add high scores button)
+- instructions
  */
 
 package main;
@@ -36,8 +34,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
-
 
 public class Main extends Application {
     private static Stage primaryStage;
@@ -58,8 +54,8 @@ public class Main extends Application {
     private static int reload1, reload2, autoshootdelay1, autoshootdelay2;
     private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
-    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3, recentinnerwall, recentinnerwall2;
-    private static int Wall1, Wall2;
+    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
+    private static int Wall1, Wall2, intwall, intwall2;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -428,16 +424,16 @@ public class Main extends Application {
     private static void createWall (int width, int height, int x, int y, Pane map) {
         Rectangle left, top, right, bottom;
         if (width > height) {
-            left = new Rectangle(x, y, 1, height);
             top = new Rectangle(x + 1, y, width - 1, height / 2);
             right = new Rectangle(x + width, y, 1, height);
             bottom = new Rectangle(x + 1, y + height / 2, width - 1, height / 2);
+            left = new Rectangle(x, y, 1, height);
 
         } else {
-            left = new Rectangle(x, y+1, width/2, height-3);
             top = new Rectangle(x, y, width,1);
             right = new Rectangle(x+width/2, y+1, width/2, height-3);
             bottom = new Rectangle(x, y+height-2, width, 2);
+            left = new Rectangle(x, y+1, width/2, height-3);
         }
 
         walls.add(top);
@@ -491,15 +487,15 @@ public class Main extends Application {
             for (int i = 0; i < walls.size(); i++) {
                 Rectangle wall = walls.get(i);
                 if (bullet.isHitting(wall)) {
-                    if (wall.getWidth() < wall.getHeight() && Wall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4 && recentinnerwall != wall) {
+                    if (wall.getWidth() < wall.getHeight() && i != intwall && nonhittableX != i%4 && nonhittableY != i%4) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX() * -1, bullet.getVelocity().getY()));
+                        intwall = i;
                         Wall1 = i/4;
-                        recentinnerwall = wall;
                     }
-                    else if (wall.getWidth() > wall.getHeight() && Wall1 != i/4 && nonhittableX != i%4 && nonhittableY != i%4 && recentinnerwall != wall) {
+                    else if (wall.getWidth() > wall.getHeight() && i != intwall && nonhittableX != i%4 && nonhittableY != i%4) {
                         bullet.setVelocity(new Point2D(bullet.getVelocity().getX(), bullet.getVelocity().getY() * -1));
                         Wall1 = i/4;
-                        recentinnerwall = wall;
+                        intwall = i;
                     }
                     bullethitwall1 = true;
                 }
@@ -515,10 +511,12 @@ public class Main extends Application {
                 if (bullet2.isHitting(wall)) {
                     if (wall.getWidth() < wall.getHeight() && Wall2 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
                         bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX() * -1, bullet2.getVelocity().getY()));
+                        intwall2 = i;
                         Wall2 = i/4;
                     }
                     else if (wall.getWidth() > wall.getHeight() && Wall2 != i/4 && nonhittableX != i%4 && nonhittableY != i%4) {
                         bullet2.setVelocity(new Point2D(bullet2.getVelocity().getX(), bullet2.getVelocity().getY() * -1));
+                        intwall2 = i;
                         Wall2 = i/4;
                     }
                     bullethitwall2 = true;
@@ -566,6 +564,8 @@ public class Main extends Application {
                     setGameState(gameState.MAP2);
                     reload1 = 0;
                     reload2 = 0;
+                    intwall = 0;
+                    intwall2 = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -578,6 +578,8 @@ public class Main extends Application {
                     setGameState(gameState.MAP3);
                     reload1 = 0;
                     reload2 = 0;
+                    intwall = 0;
+                    intwall2 = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -590,6 +592,8 @@ public class Main extends Application {
                     setGameState(gameState.MAP1);
                     reload1 = 0;
                     reload2 = 0;
+                    intwall = 0;
+                    intwall2 = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -616,7 +620,7 @@ public class Main extends Application {
             if (player1.dead() || player2.dead())
                 resetMatch();
 
-            if (autoshootdelay1 > 0)
+                if (autoshootdelay1 > 0)
                 autoshootdelay1--;
             if (autoshootdelay2 > 0)
                 autoshootdelay2--;
@@ -748,6 +752,7 @@ public class Main extends Application {
                     player1.rotateRight();
                 }
             }
+
             if (notTouching1) {
                 player1.rotateLeft(); //Only turn if it's not touching the wall
             }
@@ -760,6 +765,7 @@ public class Main extends Application {
                     player1.rotateLeft();
                 }
             }
+
             if (notTouching1) {
                 player1.rotateRight();
             }
