@@ -136,18 +136,16 @@ public class Main extends Application {
             currentScore.put("Player1", player1Score);
             currentScore.put("Player2", player2Score);
             scoreData.add(currentScore);
-            scoreData.add(currentScore);
             writer.write(scoreData.toJSONString());
             writer.flush();
             writer.close();
-
-            System.out.println(scoreData.toJSONString());
 
             for(Object record : scoreData) {
                 long player1Score = (long) ((JSONObject)record).get("Player1");
                 long player2Score = (long) ((JSONObject)record).get("Player2");
                 data.add(new Score(player1Score,player2Score));
             }
+            setGameState(gameState.LEADERBOARD);
         } catch (Exception e) {
             e.printStackTrace();
         }
