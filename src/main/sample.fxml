@@ -16,6 +16,16 @@
                   <Font size="79.0" />
                </font>
             </Label>
+            <Label prefHeight="220.0" prefWidth="393.0" text="  Player 1 uses arrows to move and m to shoot." textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label prefHeight="220.0" prefWidth="393.0" text="  Player 2 uses w, a, s, d to move and q to shoot." textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
             <SplitPane dividerPositions="0.3492462311557789">
                <items>
                   <Button fx:id="startbtn" mnemonicParsing="false" onAction="#startOnAction" text="START">

@@ -1,10 +1,3 @@
-/*
-TO DO:
-- Collision against other tanks
-- Turning corners
-- instructions
- */
-
 package main;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -48,7 +41,7 @@ public class Main extends Application {
     private static int currentMap = 0, roundCount = 0;
     static int totalRounds = 1;
     private static boolean w, a, s, d, up, down, left, right, m, q;
-    private static boolean gameStarted, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false, bullethitwall1, bullethitwall2;
+    private static boolean gameStarted, notTouching1 = true, notTouching2 = true, collisionup1 = false, collisionup2 = false, tankup1 = false, tankup2 = false, bullethitwall1, bullethitwall2;
     private static long player1Score = 0, player2Score = 0;
     private static Label labelplayer1score = new Label("Player 1: " + player1Score), labelplayer2score = new Label("Player 2: " + player2Score);
     private static int reload1, reload2, autoshootdelay1, autoshootdelay2;
@@ -179,8 +172,8 @@ public class Main extends Application {
                 case MAP1:
                     reload1 = 0;
                     reload2 = 0;
-                    autoshootdelay1 = 2;
-                    autoshootdelay2 = 2;
+                    autoshootdelay1 = 5;
+                    autoshootdelay2 = 5;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -234,8 +227,8 @@ public class Main extends Application {
                  */
                     reload1 = 0;
                     reload2 = 0;
-                    autoshootdelay1 = 2;
-                    autoshootdelay2 = 2;
+                    autoshootdelay1 = 5;
+                    autoshootdelay2 = 5;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -288,8 +281,8 @@ public class Main extends Application {
                  */
                     reload1 = 0;
                     reload2 = 0;
-                    autoshootdelay1 = 2;
-                    autoshootdelay2 = 2;
+                    autoshootdelay1 = 5;
+                    autoshootdelay2 = 5;
                     map1p.getChildren().clear();
                     map2p.getChildren().clear();
                     map3p.getChildren().clear();
@@ -394,6 +387,7 @@ public class Main extends Application {
             if (e.getCode() == KeyCode.UP) {
                 up = false;
                 collisionup1 = false;
+                tankup1 = false;
             }
             if (e.getCode() == KeyCode.DOWN) {
                 down = false;
@@ -401,6 +395,7 @@ public class Main extends Application {
             if (e.getCode() == KeyCode.W) {
                 w = false;
                 collisionup2 = false;
+                tankup2 = false;
             }
             if (e.getCode() == KeyCode.S) {
                 s = false;
@@ -454,6 +449,7 @@ public class Main extends Application {
             } else if (player.isHitting(wall) && !collisionup1) {
                 player.updateLocation(1.75);
             }
+
         }
 
         if (playerNumber == 2) {
@@ -461,6 +457,24 @@ public class Main extends Application {
                 player.updateLocation(-1.75);
             } else if (player.isHitting(wall) && !collisionup2) {
                 player.updateLocation(1.75);
+            }
+        }
+    }
+
+    private static void tankDetect(Tank player, int playerNumber) {
+        if (playerNumber == 1) {
+            if (player.isHitting(player2.getView()) && tankup1) {
+                player.updateLocation(-2);
+            } else if (player.isHitting(player2.getView()) && !tankup1) {
+                player.updateLocation(2);
+            }
+        }
+
+        if (playerNumber == 2) {
+            if (player.isHitting(player1.getView()) && tankup2) {
+                player.updateLocation(-2);
+            } else if (player.isHitting(player1.getView()) && !tankup2) {
+                player.updateLocation(2);
             }
         }
     }
@@ -618,7 +632,7 @@ public class Main extends Application {
             if (player1.dead() || player2.dead())
                 resetMatch();
 
-                if (autoshootdelay1 > 0)
+            if (autoshootdelay1 > 0)
                 autoshootdelay1--;
             if (autoshootdelay2 > 0)
                 autoshootdelay2--;
@@ -745,17 +759,23 @@ public class Main extends Application {
     private void keyCheck(Pane map) {
         if (left) { //If left is true it runs the left turn logic
             for (Rectangle wall : walls) { //For every wall in the array list, check if the player is touching one and prevent turning if it is.
-                if (player1.isHitting(wall)) {
-                    notTouching1 = false;
-                    player1.rotateRight();
+                    if (player1.isHitting(wall)) {
+                        notTouching1 = false;
+                        player1.rotateRight();
+                    }
                 }
+
+                if (player1.isHitting(player2.getView())) {
+                    player1.rotateRight();
+                    notTouching1 = false;
+                }
+
+                if (notTouching1) {
+                    player1.rotateLeft(); //Only turn if it's not touching the wall
+                }
+                notTouching1 = true;
             }
 
-            if (notTouching1) {
-                player1.rotateLeft(); //Only turn if it's not touching the wall
-            }
-            notTouching1 = true;
-        }
         if (right) {
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
@@ -764,15 +784,26 @@ public class Main extends Application {
                 }
             }
 
+            if (player1.isHitting(player2.getView())) {
+                player1.rotateLeft();
+                notTouching1 = false;
+            }
+
             if (notTouching1) {
-                player1.rotateRight();
+                player1.rotateRight(); //Only turn if it's not touching the wall
             }
             notTouching1 = true;
         }
 
 
         if (up) {
-            player1.updateLocation(1.75); //Updates the players location (Constant is for changing direction/speed)
+            player1.updateLocation(1.75); //Below this repeats the logic above for the other player
+
+            if (player1.isHitting(player2.getView())) {
+                tankup1 = true;
+                tankDetect(player1, 1);
+            }
+
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
                     collisionup1 = true;
@@ -783,6 +814,12 @@ public class Main extends Application {
 
         if (down) { //Same logic as up, but if it's going into a wall make it go forward instead of back.
             player1.updateLocation(-1.75);
+
+            if (player1.isHitting(player2.getView())) {
+                tankup1 = false;
+                tankDetect(player1, 1);
+            }
+
             for (Rectangle wall : walls) {
                 if (player1.isHitting(wall)) {
                     collisionup1 = false;
@@ -793,6 +830,12 @@ public class Main extends Application {
 
         if (w) {
             player2.updateLocation(1.75); //Below this repeats the logic above for the other player
+
+            if (player1.isHitting(player2.getView())) {
+                tankup2 = true;
+                tankDetect(player2, 2);
+            }
+
             for (Rectangle wall : walls) {
                 if (player2.isHitting(wall)) {
                     collisionup2 = true;
@@ -803,6 +846,12 @@ public class Main extends Application {
 
         if (s) {
             player2.updateLocation(-1.75);
+
+            if (player1.isHitting(player2.getView())) {
+                tankup2 = false;
+                tankDetect(player2, 2);
+            }
+
             for (Rectangle wall : walls) {
                 if (player2.isHitting(wall)) {
                     collisionup2 = false;
@@ -818,6 +867,12 @@ public class Main extends Application {
                     player2.rotateRight();
                 }
             }
+
+            if (player1.isHitting(player2.getView())) {
+                player2.rotateRight();
+                notTouching2 = false;
+            }
+
             if (notTouching2) {
                 player2.rotateLeft(); //Only turn if it's not touching the wall
             }
@@ -831,6 +886,12 @@ public class Main extends Application {
                     player2.rotateLeft();
                 }
             }
+
+            if (player1.isHitting(player2.getView())) {
+                player2.rotateLeft();
+                notTouching2 = false;
+            }
+
             if (notTouching2) {
                 player2.rotateRight();
             }
