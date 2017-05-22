@@ -47,7 +47,6 @@ public class Main extends Application {
     private static int reload1, reload2, autoshootdelay1, autoshootdelay2;
     private TableView<Score> table = new TableView<>();
     private static final ObservableList<Score> data = FXCollections.observableArrayList();
-    private static Rectangle recentwall, recentwall2, dummyrectangle, dummyrectangle2, dummyrectangle3;
     private static int Wall1, Wall2, intwall, intwall2;
 
     @Override
@@ -217,9 +216,6 @@ public class Main extends Application {
                     createWall(10, 125, 480, 150, map1p);
                     createWall(10, 75, 390, 255, map1p);
                     createWall(300, 10, 335, 330, map1p);
-                    //Creates a rectangle that is not visible on the screen to aid with bullet collision against walls.
-                    Rectangle dummyrectangle = new Rectangle(100000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
-                    map1p.getChildren().add(dummyrectangle);
 
                     //Makes the player score counters.
                     labelplayer1score.setTranslateX(0);
@@ -266,8 +262,6 @@ public class Main extends Application {
                     createWall(110, 10, 400, 165, map2p);
                     createWall(130, 10, 495, 270, map2p);
                     createWall(10, 100, 490, 230, map2p);
-                    Rectangle dummyrectangle2 = new Rectangle(10000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
-                    map2p.getChildren().add(dummyrectangle2);
 
 
                     labelplayer1score.setTranslateX(0);
@@ -320,8 +314,6 @@ public class Main extends Application {
                     createWall(60, 10, 360, 225, map3p);
                     createWall(60, 10, 455, 125, map3p);
                     createWall(10, 225, 510, 0, map3p);
-                    Rectangle dummyrectangle3 = new Rectangle(100000, 1, 1000, 1000); //Creates a rectangle outside of pain that recentwall is assigned to when the bullet dies.
-                    map3p.getChildren().add(dummyrectangle3);
 
                     labelplayer1score.setTranslateX(0);
                     labelplayer1score.setTranslateY(390);
@@ -672,7 +664,8 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map1p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-                            recentwall = dummyrectangle;
+                            //sets intwall to a negative value so bullets don't go through walls
+                            intwall = -5;
                         }
                     }
 
@@ -688,7 +681,7 @@ public class Main extends Application {
                         if (bullet2.getCounter() > 300 || bullet2.dead()) {
                             map1p.getChildren().remove(bullet2.getView());
                             bullet2.setStatus(false);
-                            recentwall2 = dummyrectangle;
+                            intwall = -5;
                         }
                     }
 
@@ -710,7 +703,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map2p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-                            recentwall = dummyrectangle2;
+                            intwall = -5;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -724,7 +717,7 @@ public class Main extends Application {
                         if (bullet2.getCounter() > 300 || bullet2.dead()) {
                             map2p.getChildren().remove(bullet2.getView());
                             bullet2.setStatus(false);
-                            recentwall2 = dummyrectangle2;
+                            intwall = -5;
                         }
                     }
                     for (int i = 0; i < bullets2.size() ; i++) {
@@ -746,7 +739,7 @@ public class Main extends Application {
                         if (bullet.getCounter() > 300 || bullet.dead()) {
                             map3p.getChildren().remove(bullet.getView());
                             bullet.setStatus(false);
-                            recentwall = dummyrectangle3;
+                            intwall = -5;
                         }
                     }
                     for (int i = 0; i < bullets.size() ; i++) {
@@ -761,7 +754,7 @@ public class Main extends Application {
                         if (bullet2.getCounter() > 300 || bullet2.dead()) {
                             map3p.getChildren().remove(bullet2.getView());
                             bullet2.setStatus(false);
-                            recentwall = dummyrectangle3;
+                            intwall = -5;
                         }
                     }
                     for (int i = 0; i < bullets2.size() ; i++) {
