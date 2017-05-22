@@ -938,7 +938,7 @@ public class Main extends Application {
         //Shooting logic for player 2, same as player 1 above.
         if (q && reload2 == 0 && autoshootdelay2 == 0) {
             if (player2.alive()) {
-                Bullet2 bullet2 = new Bullet2();
+                Bullet bullet2 = new Bullet();
                 bullet2.setVelocity(player2.getVelocity().normalize().multiply(3));
                 addBullet2(bullet2, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
                 reload2 = 300;
@@ -1014,12 +1014,6 @@ public class Main extends Application {
      */
     static class Bullet extends Element {
         Bullet() {
-            super(new Circle(5, 5, 5, Color.BLACK));
-        }
-    }
-
-    static class Bullet2 extends Element {
-        Bullet2() {
             super(new Circle(5, 5, 5, Color.BLACK));
         }
     }
