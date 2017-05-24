@@ -562,16 +562,17 @@ public class Main extends Application {
     Adds the bullet to the arraylist of bullets or bullets2 (global)
     Adds it to the game
      */
-    private void addBullet(Element element, double x, double y, Pane map) {
-        bullets.add(element);
-        addToGame(element, x, y, map);
-        bullethitwall1 = false;
-    }
+    private void addBullet(Element element, double x, double y, Pane map, Element player) {
+        if (player == player1) {
+            bullets.add(element);
+            bullethitwall1 = false;
+        }
 
-    private void addBullet2(Element element, double x, double y, Pane map) {
-        bullets2.add(element);
-        addToGame(element, x, y, map);
-        bullethitwall2 = false;
+        else if (player == player2) {
+            bullets2.add(element);
+            bullethitwall2 = false;
+        }
+            addToGame(element, x, y, map);
     }
 
 
@@ -930,7 +931,7 @@ public class Main extends Application {
                 //Sets the velocity to 3x that of the player who shot it
                 bullet.setVelocity(player1.getVelocity().normalize().multiply(3));
                 //Adds the bullet
-                addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map);
+                addBullet(bullet, player1.getView().getTranslateX(), player1.getView().getTranslateY(), map, player1);
                 reload1 = 300;
             }
         }
@@ -940,7 +941,7 @@ public class Main extends Application {
             if (player2.alive()) {
                 Bullet bullet2 = new Bullet();
                 bullet2.setVelocity(player2.getVelocity().normalize().multiply(3));
-                addBullet2(bullet2, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map);
+                addBullet(bullet2, player2.getView().getTranslateX(), player2.getView().getTranslateY(), map, player2);
                 reload2 = 300;
             }
         }
